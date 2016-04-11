@@ -104,6 +104,17 @@ cleanup of the native resources, e.g. attempting to disable a port reports
 success but the port is still enabled - it looks like a race condition in
 native code.
 
+Installation
+------------
+
+At the present time you need to clone this github repository and use Maven to
+build your own distribution.
+
+Follow the normal github instructions to clone the repository then simply type
+`mvn install` to build a distribution package. You can than transfer that
+package archive to the Pi, uncompress it and start using the camera from your
+Java applications.
+
 Trademark Acknowledgement
 -------------------------
 
