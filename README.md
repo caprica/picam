@@ -25,7 +25,6 @@ Add the library jar file and its dependencies to your project class-path:
 
  * picam-<version>-SNAPSHOT.jar
  * jna-4.2.1.jar
- * jna-platform-4.2.1.jar
  * logback-classic-1.1.7.jar
  * logback-core-1.1.7.jar
  * slf4j-api-1.7.20.jar
