@@ -65,7 +65,7 @@ support over time:
 - [x] saturation
 - [x] sharpness
 - [x] video stabilisation
-- [x] shutter speed
+- [ ] shutter speed
 - [x] ISO
 - [x] exposure mode
 - [x] exposure metering mode
