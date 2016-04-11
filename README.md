@@ -38,7 +38,7 @@ CameraConfiguration config = cameraConfiguration()
     .height(1080);
 
 try (Camera camera = new Camera(config)) {
-    camera.takePicture(new FilePictureCaptureCallback(new File("picam.png")));
+    camera.takePicture(new FilePictureCaptureHandler(new File("picam.png")));
 }
 ```
 
