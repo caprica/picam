@@ -108,3 +108,10 @@ Trademark Acknowledgement
 -------------------------
 
 Raspberry Pi is a trademark of the Raspberry Pi Foundation.
+
+Demo Application
+----------------
+
+This screen-shot shows a Java web application running on the Pi:
+
+![picam-demo](https://github.com/caprica/picam/raw/master/etc/demo.png "picam-demo")
