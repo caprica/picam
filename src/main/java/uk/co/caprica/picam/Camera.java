@@ -184,7 +184,7 @@ public final class Camera implements AutoCloseable {
 
         disableEncoderOutputPort();
 
-        destroyConnection(cameraEncoderConnection);
+//        destroyConnection(cameraEncoderConnection);
 
         disableComponent(encoderComponent);
         disableComponent(cameraComponent);
@@ -390,8 +390,6 @@ public final class Camera implements AutoCloseable {
     private void disableEncoderOutputPort() {
         logger.debug("disableEncoderOutputPort()");
 
-        if (encoderOutputPort.isEnabled()) {
-            disablePort(encoderOutputPort);
-        }
+        disablePort(encoderOutputPort);
     }
 }

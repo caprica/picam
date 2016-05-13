@@ -123,7 +123,6 @@ final class MmalUtils {
 
         int result = MMAL_SUCCESS;
         if (port != null) {
-            port.read(); // FIXME?
             logger.debug("port.name={}", port.name);
             boolean enabled = port.isEnabled();
             logger.debug("enabled={}", enabled);
