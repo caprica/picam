@@ -86,7 +86,7 @@ final class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
 
         mmal.mmal_buffer_header_release(buffer);
 
-        if (!finished && port.is_enabled != 0) {
+        if (!finished && port.isEnabled()) {
             sendNextPictureBuffer(port);
         }
 
@@ -107,9 +107,6 @@ final class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
         if (nextBuffer == null) {
             throw new RuntimeException("Failed to get next buffer from picture pool");
         }
-
-        nextBuffer.read();
-        nextBuffer.write();
 
         int result = mmal.mmal_port_send_buffer(port, nextBuffer);
         logger.debug("result={}", result);

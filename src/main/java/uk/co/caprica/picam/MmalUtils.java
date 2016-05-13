@@ -125,11 +125,10 @@ final class MmalUtils {
         if (port != null) {
             port.read(); // FIXME?
             logger.debug("port.name={}", port.name);
-            boolean enabled = port.is_enabled != 0;
+            boolean enabled = port.isEnabled();
             logger.debug("enabled={}", enabled);
             if (enabled) {
                 result = mmal.mmal_port_disable(port);
-                port.read(); // FIXME?
             }
         }
         logger.debug("result={}", result);

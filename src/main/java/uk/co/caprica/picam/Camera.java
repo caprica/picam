@@ -116,6 +116,8 @@ public final class Camera implements AutoCloseable {
     }
 
     public void takePicture(PictureCaptureHandler pictureCaptureHandler) {
+        logger.info(">>> Begin Take Picture >>>");
+
         logger.debug("takePicture()");
 
         CountDownLatch captureFinishedLatch = new CountDownLatch(1);
@@ -166,6 +168,8 @@ public final class Camera implements AutoCloseable {
             disableEncoderOutputPort();
             encoderBufferCallback = null;
         }
+
+        logger.info("<<< End Take Picture <<<");
     }
 
     @Override
@@ -176,8 +180,8 @@ public final class Camera implements AutoCloseable {
         //    1. a warning will be logged complaining about a port already being disabled
         //    2. occasionally there is a race apparent, a call to disable returns success yet the resource reports it is
         //       still enabled
+        // might be fixed by port.isEnabled() and the new read()?
 
-//        disablePort(encoderOutputPort);
         disableEncoderOutputPort();
 
         destroyConnection(cameraEncoderConnection);
@@ -386,8 +390,7 @@ public final class Camera implements AutoCloseable {
     private void disableEncoderOutputPort() {
         logger.debug("disableEncoderOutputPort()");
 
-        encoderOutputPort.read(); // FIXME needed or not? leaving it for now until the clean-up issues are fully resolved
-        if (encoderOutputPort.is_enabled != 0) {
+        if (encoderOutputPort.isEnabled()) {
             disablePort(encoderOutputPort);
         }
     }

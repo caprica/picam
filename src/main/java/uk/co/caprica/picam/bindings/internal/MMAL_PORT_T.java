@@ -100,4 +100,8 @@ public class MMAL_PORT_T extends Structure {
     protected List<String> getFieldOrder() {
         return FIELD_ORDER;
     }
+
+	public boolean isEnabled() {
+		return 0 != (Integer) readField("is_enabled");
+	}
 }
