@@ -148,7 +148,7 @@ public final class Camera implements AutoCloseable {
             try {
                 logger.debug("wait for capture to complete");
                 captureFinishedLatch.await(); // FIXME timeout version?
-                logger.info("capture completed");
+                logger.info("Capture completed");
             }
             catch (InterruptedException e) {
                 logger.warn("Interrupted waiting for capture to finish", e);
@@ -384,7 +384,7 @@ public final class Camera implements AutoCloseable {
             throw new RuntimeException("Failed to start capture");
         }
 
-        logger.info("capture started");
+        logger.info("Capture started");
     }
 
     private void disableEncoderOutputPort() {
