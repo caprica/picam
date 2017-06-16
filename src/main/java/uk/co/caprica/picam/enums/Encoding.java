@@ -23,6 +23,7 @@ public enum Encoding {
 
     BMP("BMP "),
     GIF("GIF "),
+    I420("I420"),
     JPEG("JPEG"),
     PNG("PNG "),
 
