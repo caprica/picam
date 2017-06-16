@@ -51,6 +51,8 @@ public interface LibMmal extends Library {
 
     void mmal_format_copy(MMAL_ES_FORMAT_T format_dest, MMAL_ES_FORMAT_T format_src);
 
+    int mmal_format_full_copy(MMAL_ES_FORMAT_T format_dest, MMAL_ES_FORMAT_T format_src);
+
     int mmal_port_format_commit(MMAL_PORT_T port);
 
     int mmal_port_enable(MMAL_PORT_T port, MMAL_PORT_BH_CB_T cb);
