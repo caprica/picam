@@ -13,7 +13,7 @@
 
     <name>picam</name>
     <description>Unofficial Java API library for the Raspberry Pi camera.</description>
-    <url>http://capricasoftware.co.uk/#/projects/picam</url>
+    <url>http://capricasoftware.co.uk/projects/picam</url>
     <inceptionYear>2016</inceptionYear>
 
     <licenses>
