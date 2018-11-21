@@ -23,7 +23,7 @@ More detailed installation and usage instructions will be provided soon.
 
 Add the library jar file and its dependencies to your project class-path:
 
- * picam-<version>-SNAPSHOT.jar
+ * picam-&lt;version>-SNAPSHOT.jar
  * jna-4.2.1.jar
  * logback-classic-1.1.7.jar
  * logback-core-1.1.7.jar
