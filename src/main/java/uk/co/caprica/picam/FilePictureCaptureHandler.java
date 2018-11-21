@@ -53,8 +53,11 @@ public class FilePictureCaptureHandler implements PictureCaptureHandler<File> {
     @Override
     public void end() throws Exception {
         logger.debug("end()");
-        out.flush();
-        out.close();
+        if (out != null) {
+            out.flush();
+            out.close();
+            out = null;
+        }
     }
 
     @Override
