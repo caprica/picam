@@ -19,6 +19,8 @@
 
 package uk.co.caprica.picam;
 
+import com.sun.jna.CallbackThreadInitializer;
+import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 import org.slf4j.Logger;
@@ -67,6 +69,12 @@ import static uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_CAMERA_CONFIG
 import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
 import static uk.co.caprica.picam.enums.Encoding.OPAQUE;
 
+/**
+ * A camera component.
+ * <p>
+ * Note that a delay (set via {@link CameraConfiguration}) may be necessary to give the sensor time to "settle",
+ * otherwise the picture may be compromised (e.g. bad colouration).
+ */
 public final class Camera implements AutoCloseable {
 
     private static final String MMAL_COMPONENT_DEFAULT_IMAGE_ENCODER = "vc.ril.image_encode";
@@ -82,6 +90,8 @@ public final class Camera implements AutoCloseable {
     private static final int ALIGN_HEIGHT = 16;
 
     private final Logger logger = LoggerFactory.getLogger(Camera.class);
+
+    private final CallbackThreadInitializer callbackThreadInitializer = new CallbackThreadInitializer(true, false, "MMALCallback");
 
     private final CameraControlCallback cameraControlCallback = new CameraControlCallback();
 
@@ -171,6 +181,10 @@ public final class Camera implements AutoCloseable {
     @Override
     public void close() throws Exception {
         logger.debug("close()");
+
+        if (encoderBufferCallback != null) {
+            callbackThreadInitializer.detach(encoderBufferCallback);
+        }
 
         disableEncoderOutputPort();
 
@@ -333,6 +347,8 @@ public final class Camera implements AutoCloseable {
         logger.debug("createEncoderBufferCallback()");
 
         encoderBufferCallback = new EncoderBufferCallback(picturePool);
+
+        Native.setCallbackThreadInitializer(encoderBufferCallback, callbackThreadInitializer);
     }
 
     private void enableEncoderOutput() {
@@ -360,7 +376,7 @@ public final class Camera implements AutoCloseable {
                 throw new RuntimeException(String.format("Failed to get buffer %d from queue", i));
             }
 
-            int result = mmal.mmal_port_send_buffer(encoderOutputPort, buffer);
+            int result = mmal.mmal_port_send_buffer(encoderOutputPort.getPointer(), buffer.getPointer());
             logger.debug("result={}", result);
 
             if (result != MMAL_SUCCESS) {

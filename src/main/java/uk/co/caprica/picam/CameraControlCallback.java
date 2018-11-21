@@ -19,11 +19,10 @@
 
 package uk.co.caprica.picam;
 
+import com.sun.jna.Pointer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_BH_CB_T;
-import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 
 import static uk.co.caprica.picam.bindings.LibMmal.mmal;
 
@@ -35,7 +34,7 @@ final class CameraControlCallback implements MMAL_PORT_BH_CB_T {
     }
 
     @Override
-    public void apply(MMAL_PORT_T port, MMAL_BUFFER_HEADER_T buffer) {
+    public void apply(Pointer port, Pointer buffer) {
         logger.debug("apply()");
 
         logger.trace("port={}", port);

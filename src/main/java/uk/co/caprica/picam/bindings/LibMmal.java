@@ -63,11 +63,11 @@ public interface LibMmal extends Library {
 
     MMAL_BUFFER_HEADER_T mmal_queue_get(PointerByReference queue);
 
-    int mmal_port_send_buffer(MMAL_PORT_T port, MMAL_BUFFER_HEADER_T buffer);
+    int mmal_port_send_buffer(Pointer port, Pointer buffer);
 
-    int mmal_buffer_header_mem_lock(MMAL_BUFFER_HEADER_T header);
+    int mmal_buffer_header_mem_lock(Pointer header);
 
-    void mmal_buffer_header_mem_unlock(MMAL_BUFFER_HEADER_T header);
+    void mmal_buffer_header_mem_unlock(Pointer header);
 
-    void mmal_buffer_header_release(MMAL_BUFFER_HEADER_T header);
+    void mmal_buffer_header_release(Pointer header);
 }

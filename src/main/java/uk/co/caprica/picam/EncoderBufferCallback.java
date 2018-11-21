@@ -19,6 +19,7 @@
 
 package uk.co.caprica.picam;
 
+import com.sun.jna.Pointer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_T;
@@ -56,40 +57,49 @@ class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
     }
 
     @Override
-    public void apply(MMAL_PORT_T port, MMAL_BUFFER_HEADER_T buffer) {
+    public void apply(Pointer pPort, Pointer pBuffer) {
         logger.debug("apply()");
 
-        logger.trace("port={}", port);
-        logger.trace("buffer={}", buffer);
+        logger.trace("port={}", pPort);
+        logger.trace("buffer={}", pBuffer);
 
         boolean finished = false;
 
-        int bufferLength = buffer.length;
-        logger.debug("bufferLength={}", bufferLength);
+        // Lock the native buffer before accessing any of its contents
+        mmal.mmal_buffer_header_mem_lock(pBuffer);
 
-        if (bufferLength > 0) {
-            mmal.mmal_buffer_header_mem_lock(buffer); // FIXME check return?
-            try {
+        try {
+            MMAL_BUFFER_HEADER_T buffer = new MMAL_BUFFER_HEADER_T(pBuffer);
+            buffer.read();
+
+            int bufferLength = buffer.length;
+            logger.debug("bufferLength={}", bufferLength);
+
+            if (bufferLength > 0) {
                 byte[] data = buffer.data.getByteArray(buffer.offset, bufferLength);
                 pictureCaptureHandler.pictureData(data);
             }
-            catch (Exception e) {
-                logger.error("Error in callback handling picture data", e);
+
+            int flags = buffer.flags;
+            logger.debug("flags={}", flags);
+
+            if ((flags & (MMAL_BUFFER_HEADER_FLAG_FRAME_END | MMAL_BUFFER_HEADER_FLAG_TRANSMISSION_FAILED)) != 0) {
                 finished = true;
             }
-            finally {
-                mmal.mmal_buffer_header_mem_unlock(buffer);
-            }
         }
-
-        int flags = buffer.flags;
-        logger.debug("flags={}", flags);
-
-        if ((buffer.flags & (MMAL_BUFFER_HEADER_FLAG_FRAME_END | MMAL_BUFFER_HEADER_FLAG_TRANSMISSION_FAILED)) != 0) {
+        catch (Exception e) {
+            logger.error("Error in callback handling picture data", e);
             finished = true;
         }
+        finally {
+            // Whatever happened, unlock the native buffer
+            mmal.mmal_buffer_header_mem_unlock(pBuffer);
+        }
 
-        mmal.mmal_buffer_header_release(buffer);
+        mmal.mmal_buffer_header_release(pBuffer);
+
+        MMAL_PORT_T port = new MMAL_PORT_T(pPort);
+        port.read();
 
         if (port.isEnabled()) {
             sendNextPictureBuffer(port);
@@ -113,7 +123,7 @@ class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
             throw new RuntimeException("Failed to get next buffer from picture pool");
         }
 
-        int result = mmal.mmal_port_send_buffer(port, nextBuffer);
+        int result = mmal.mmal_port_send_buffer(port.getPointer(), nextBuffer.getPointer());
         logger.debug("result={}", result);
 
         if (result != MMAL_SUCCESS) {

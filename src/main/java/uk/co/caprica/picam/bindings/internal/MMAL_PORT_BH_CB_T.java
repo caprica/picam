@@ -20,8 +20,9 @@
 package uk.co.caprica.picam.bindings.internal;
 
 import com.sun.jna.Callback;
+import com.sun.jna.Pointer;
 
 public interface MMAL_PORT_BH_CB_T extends Callback {
 
-    void apply(MMAL_PORT_T port, MMAL_BUFFER_HEADER_T buffer);
+    void apply(Pointer port, Pointer buffer);
 }
