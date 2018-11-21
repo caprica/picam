@@ -21,17 +21,21 @@ package uk.co.caprica.picam.bindings.internal;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
+import uk.co.caprica.picam.bindings.MmalParameters;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class MMAL_PARAMETER_THUMBNAIL_CONFIG_T extends Structure {
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_THUMBNAIL_CONFIGURATION;
+
+public class MMAL_PARAMETER_THUMBNAIL_CONFIG_T extends ParameterStructure {
 
     public static class ByReference extends MMAL_PARAMETER_THUMBNAIL_CONFIG_T implements Structure.ByReference {
-    };
+    }
 
     public static class ByValue extends MMAL_PARAMETER_THUMBNAIL_CONFIG_T implements Structure.ByValue {
-    };
+    }
 
 	private static final List<String> FIELD_ORDER = Collections.unmodifiableList(Arrays.asList(
         "hdr",
@@ -40,8 +44,6 @@ public class MMAL_PARAMETER_THUMBNAIL_CONFIG_T extends Structure {
         "height",
         "quality"
 	));
-
-	public MMAL_PARAMETER_HEADER_T hdr;
 
 	public int enable;
 
@@ -52,7 +54,7 @@ public class MMAL_PARAMETER_THUMBNAIL_CONFIG_T extends Structure {
 	public int quality;
 
 	public MMAL_PARAMETER_THUMBNAIL_CONFIG_T() {
-		super();
+		super(MMAL_PARAMETER_THUMBNAIL_CONFIGURATION);
 	}
 
 	public MMAL_PARAMETER_THUMBNAIL_CONFIG_T(Pointer peer) {

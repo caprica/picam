@@ -32,18 +32,16 @@ import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CUSTOM_
 public class MMAL_PARAMETER_AWB_GAINS_T extends ParameterStructure {
 
     public static class ByReference extends MMAL_PARAMETER_AWB_GAINS_T implements Structure.ByReference {
-    };
+    }
 
     public static class ByValue extends MMAL_PARAMETER_AWB_GAINS_T implements Structure.ByValue {
-    };
+    }
 
 	private static final List<String> FIELD_ORDER = Collections.unmodifiableList(Arrays.asList(
 		"hdr",
 		"r_gain",
 		"b_gain"
 	));
-
-	public MMAL_PARAMETER_HEADER_T hdr;
 
 	public MMAL_RATIONAL_T r_gain;
 
