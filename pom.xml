@@ -7,6 +7,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+
     <artifactId>picam</artifactId>
     <groupId>uk.co.caprica</groupId>
     <version>0.1.0-SNAPSHOT</version>
@@ -15,6 +21,8 @@
     <description>Unofficial Java API library for the Raspberry Pi camera.</description>
     <url>http://capricasoftware.co.uk/projects/picam</url>
     <inceptionYear>2016</inceptionYear>
+
+    <packaging>jar</packaging>
 
     <licenses>
         <license>
@@ -121,6 +129,31 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.1</version>
+                <configuration>
+                    <author>true</author>
+                    <charset>UTF-8</charset>
+                    <doctitle>${project.name} ${project.version} API Documentation</doctitle>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <encoding>UTF-8</encoding>
+                    <footer>(C)2016-2018 Caprica Software Limited</footer>
+                    <show>public</show>
+                    <javadocVersion>1.8</javadocVersion>
+                    <quiet>true</quiet>
+                    <failOnError>true</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
