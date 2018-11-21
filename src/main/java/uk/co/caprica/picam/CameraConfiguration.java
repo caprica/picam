@@ -40,7 +40,7 @@ public final class CameraConfiguration {
 
     private static final Integer DEFAULT_HEIGHT = 1944;
 
-    private static final Integer DEFAULT_DELAY = 5000;
+    private static final Integer DEFAULT_DELAY = 5;
 
     private Integer width = DEFAULT_WIDTH;
 
