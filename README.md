@@ -83,26 +83,6 @@ support over time:
 - [x] initial capture delay (time for the sensor to 'settle')
 - [ ] raw capture
 
-Known Issues
-------------
-
-Important!
-
-The native image encoder sometimes fails to send the final frame of image data.
-I have no idea why this intermittently fails, it seems to happen roughly 10%
-of the time. At the present time this will cause a hang in the encoder buffer
-callback function, requiring SIGKILL to terminate the Java application.
-
-Warning messages are logged when the native camera resources are freed up, e.g.
-destroying the connection between the camera and the encoder causes a warning
-to be logged stating that a port can not be disabled (because it is already
-disabled).
-
-Sometimes further warning messages are logged to the native console during
-cleanup of the native resources, e.g. attempting to disable a port reports
-success but the port is still enabled - it looks like a race condition in
-native code.
-
 Installation
 ------------
 
