@@ -26,27 +26,33 @@ import uk.co.caprica.picam.bindings.internal.MMAL_POOL_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_BH_CB_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 import static uk.co.caprica.picam.bindings.LibMmal.mmal;
 import static uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_FLAG.MMAL_BUFFER_HEADER_FLAG_FRAME_END;
 import static uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_FLAG.MMAL_BUFFER_HEADER_FLAG_TRANSMISSION_FAILED;
 import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
 
-final class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
+class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
 
     private final Logger logger = LoggerFactory.getLogger(EncoderBufferCallback.class);
 
-    private final PictureCaptureHandler pictureCaptureHandler;
-
-    private final CountDownLatch captureFinishedLatch;
+    private final Semaphore captureFinishedSemaphore = new Semaphore(0);
 
     private final MMAL_POOL_T picturePool;
 
-    EncoderBufferCallback(PictureCaptureHandler pictureCaptureHandler, CountDownLatch captureFinishedLatch, MMAL_POOL_T picturePool) {
-        this.pictureCaptureHandler = pictureCaptureHandler;
-        this.captureFinishedLatch = captureFinishedLatch;
+    private PictureCaptureHandler pictureCaptureHandler;
+
+    EncoderBufferCallback(MMAL_POOL_T picturePool) {
         this.picturePool = picturePool;
+    }
+
+    void setPictureCaptureHandler(PictureCaptureHandler pictureCaptureHandler) {
+        this.pictureCaptureHandler = pictureCaptureHandler;
+    }
+
+    void waitForCaptureToFinish() throws InterruptedException {
+        captureFinishedSemaphore.acquire();
     }
 
     @Override
@@ -64,7 +70,6 @@ final class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
         if (bufferLength > 0) {
             mmal.mmal_buffer_header_mem_lock(buffer); // FIXME check return?
             try {
-                // interface callback with the bytes
                 byte[] data = buffer.data.getByteArray(buffer.offset, bufferLength);
                 pictureCaptureHandler.pictureData(data);
             }
@@ -86,7 +91,7 @@ final class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
 
         mmal.mmal_buffer_header_release(buffer);
 
-        if (!finished && port.isEnabled()) {
+        if (port.isEnabled()) {
             sendNextPictureBuffer(port);
         }
 
@@ -94,7 +99,7 @@ final class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
 
         if (finished) {
             logger.debug("signal capture complete");
-            captureFinishedLatch.countDown();
+            captureFinishedSemaphore.release();
         }
     }
 

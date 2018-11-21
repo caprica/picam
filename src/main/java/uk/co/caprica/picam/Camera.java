@@ -30,8 +30,6 @@ import uk.co.caprica.picam.bindings.internal.MMAL_POOL_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_VIDEO_FORMAT_T;
 
-import java.util.concurrent.CountDownLatch;
-
 import static uk.co.caprica.picam.AlignUtils.alignUp;
 import static uk.co.caprica.picam.CameraParameterUtils.setAutomaticWhiteBalanceMode;
 import static uk.co.caprica.picam.CameraParameterUtils.setBrightness;
@@ -56,7 +54,6 @@ import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_uin
 import static uk.co.caprica.picam.MmalUtils.connectPorts;
 import static uk.co.caprica.picam.MmalUtils.createComponent;
 import static uk.co.caprica.picam.MmalUtils.destroyComponent;
-import static uk.co.caprica.picam.MmalUtils.destroyConnection;
 import static uk.co.caprica.picam.MmalUtils.disableComponent;
 import static uk.co.caprica.picam.MmalUtils.disablePort;
 import static uk.co.caprica.picam.MmalUtils.enableComponent;
@@ -104,6 +101,8 @@ public final class Camera implements AutoCloseable {
 
     private Pointer cameraEncoderConnection;
 
+    private EncoderBufferCallback encoderBufferCallback;
+
     public Camera(CameraConfiguration configuration) {
         logger.debug("Camera(configuration={})", configuration);
 
@@ -113,6 +112,9 @@ public final class Camera implements AutoCloseable {
         createPicturePool();
         createCamera();
         connectCameraToEncoder();
+        createEncoderBufferCallback();
+        enableEncoderOutput();
+        sendBuffersToEncoder();
     }
 
     public void takePicture(PictureCaptureHandler pictureCaptureHandler) {
@@ -120,34 +122,29 @@ public final class Camera implements AutoCloseable {
 
         logger.debug("takePicture()");
 
-        CountDownLatch captureFinishedLatch = new CountDownLatch(1);
-
-        EncoderBufferCallback encoderBufferCallback = new EncoderBufferCallback(pictureCaptureHandler, captureFinishedLatch, picturePool);
+        encoderBufferCallback.setPictureCaptureHandler(pictureCaptureHandler);
 
         try {
-            logger.info("Waiting to capture...");
+            logger.info("Preparing to capture...");
 
             Integer delay = configuration.delay();
             logger.debug("delay={}", delay);
             if (delay != null && delay > 0) {
                 try {
-                    Thread.sleep(delay); // FIXME is this really necessary, Raspistill does it to let the exposure "settle" or somesuch
+                    Thread.sleep(delay);
                 }
                 catch (InterruptedException e) {
                     logger.error("Interrupted while waiting before capture", e);
                 }
             }
 
-            enableEncoderOutput(encoderBufferCallback);
-            sendBuffersToEncoder();
+            pictureCaptureHandler.begin();
 
             startCapture();
 
-            pictureCaptureHandler.begin();
-
             try {
                 logger.debug("wait for capture to complete");
-                captureFinishedLatch.await(); // FIXME timeout version?
+                encoderBufferCallback.waitForCaptureToFinish();
                 logger.info("Capture completed");
             }
             catch (InterruptedException e) {
@@ -165,8 +162,7 @@ public final class Camera implements AutoCloseable {
                 logger.error("Callback failure after capture finished", e);
             }
 
-            disableEncoderOutputPort();
-            encoderBufferCallback = null;
+            encoderBufferCallback.setPictureCaptureHandler(null);
         }
 
         logger.info("<<< End Take Picture <<<");
@@ -176,15 +172,7 @@ public final class Camera implements AutoCloseable {
     public void close() throws Exception {
         logger.debug("close()");
 
-        // FIXME something wrong with clean-up
-        //    1. a warning will be logged complaining about a port already being disabled
-        //    2. occasionally there is a race apparent, a call to disable returns success yet the resource reports it is
-        //       still enabled
-        // might be fixed by port.isEnabled() and the new read()?
-
         disableEncoderOutputPort();
-
-//        destroyConnection(cameraEncoderConnection);
 
         disableComponent(encoderComponent);
         disableComponent(cameraComponent);
@@ -264,7 +252,8 @@ public final class Camera implements AutoCloseable {
         config.max_stills_w = configuration.width();
         config.max_stills_h = configuration.height();
         config.stills_yuv422 = 0;
-        config.one_shot_stills = 1;
+        config.one_shot_stills = 1; // FIXME? forum posts warn off this...
+//        config.one_shot_stills = 0;
         // Preview configuration must be set to something reasonable, even though preview is not used
         config.max_preview_video_w = 320;
         config.max_preview_video_h = 240;
@@ -340,7 +329,13 @@ public final class Camera implements AutoCloseable {
         logger.trace("cameraEncoderConnection={}", cameraEncoderConnection);
     }
 
-    private void enableEncoderOutput(EncoderBufferCallback encoderBufferCallback) {
+    private void createEncoderBufferCallback() {
+        logger.debug("createEncoderBufferCallback()");
+
+        encoderBufferCallback = new EncoderBufferCallback(picturePool);
+    }
+
+    private void enableEncoderOutput() {
         logger.debug("enableEncoderOutput()");
 
         int result = mmal.mmal_port_enable(encoderOutputPort, encoderBufferCallback);
