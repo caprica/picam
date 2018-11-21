@@ -28,8 +28,10 @@ import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
  * A simple test to capture one or more images from the camera and save them to disk.
  *
  * 3280 x 2464
+ * 2592 x 1944
  * 1640 x 1212
  *  820 x  616
+ *  648 x  486
  */
 public class BasicTest {
 
@@ -52,12 +54,10 @@ public class BasicTest {
 
         int max = Integer.parseInt(args[2]);
 
-        // FIXME remember default delay is 5000 probably should document that somewhere (or even remove that default)
-
         CameraConfiguration config = cameraConfiguration()
             .width(width)
             .height(height)
-            .delay(0)
+            .delay(5)
 //            .brightness(50)
 //            .contrast(-30)
 //            .saturation(80)
