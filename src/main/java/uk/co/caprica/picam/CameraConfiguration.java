@@ -183,8 +183,8 @@ public final class CameraConfiguration {
     }
 
     public CameraConfiguration exposureCompensation(Integer exposureCompensation) {
-        if (exposureCompensation < -10 || exposureCompensation > 10){
-            throw new IllegalArgumentException("Exposure Compensation must be in the range -1 to 10");
+        if (exposureCompensation < -10 || exposureCompensation > 10) {
+            throw new IllegalArgumentException("Exposure Compensation must be in the range -10 to 10");
         }
         this.exposureCompensation = exposureCompensation;
         return this;
