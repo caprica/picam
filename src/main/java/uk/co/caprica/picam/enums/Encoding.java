@@ -26,6 +26,8 @@ public enum Encoding {
     I420("I420"),
     JPEG("JPEG"),
     PNG("PNG "),
+    RGB24("RGB3"),
+    BGR24("BGR3"),
 
     OPAQUE("OPQV");
 
