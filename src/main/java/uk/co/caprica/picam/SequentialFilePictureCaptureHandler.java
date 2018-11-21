@@ -26,22 +26,40 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
+/**
+ * A simple picture capture handler implementation that saves images to disk with sequentially
+ * numbered filenames.
+ */
 public class SequentialFilePictureCaptureHandler implements PictureCaptureHandler<File> {
+
+    // Buffer size, somewhat arbitrary (default is 8k)
+    private static final int BUFFER_SIZE = 1024 * 32;
 
     private final Logger logger = LoggerFactory.getLogger(SequentialFilePictureCaptureHandler.class);
 
-    private final File file;
+    private final String pattern;
+
+    private int number;
+
+    private File file;
 
     private BufferedOutputStream out;
 
-    public SequentialFilePictureCaptureHandler(File file) {
-        this.file = file;
+    public SequentialFilePictureCaptureHandler(String pattern) {
+        this(pattern, 1);
+    }
+
+    public SequentialFilePictureCaptureHandler(String pattern, int initial) {
+        this.pattern = pattern;
+        this.number = initial;
     }
 
     @Override
     public void begin() throws Exception {
         logger.debug("begin()");
-        out = new BufferedOutputStream(new FileOutputStream(file));
+        file = new File(String.format(pattern, number++));
+        logger.trace("file={}", file.getAbsolutePath());
+        out = new BufferedOutputStream(new FileOutputStream(file), BUFFER_SIZE);
     }
 
     @Override
