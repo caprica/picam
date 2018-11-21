@@ -23,11 +23,21 @@ import java.io.ByteArrayOutputStream;
 
 public class ByteArrayPictureCaptureHandler implements PictureCaptureHandler<ByteArrayOutputStream> {
 
+    private final Integer initialSize;
+
     private ByteArrayOutputStream out;
+
+    public ByteArrayPictureCaptureHandler() {
+        this.initialSize = null;
+    }
+
+    public ByteArrayPictureCaptureHandler(int initialSize) {
+        this.initialSize = initialSize;
+    }
 
     @Override
     public void begin() throws Exception {
-        out = new ByteArrayOutputStream();
+        out = initialSize != null ? new ByteArrayOutputStream(initialSize) : new ByteArrayOutputStream();
     }
 
     @Override
