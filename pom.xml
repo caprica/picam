@@ -12,7 +12,7 @@
 
     <artifactId>picam</artifactId>
     <groupId>uk.co.caprica</groupId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
 
     <name>picam</name>
     <description>Unofficial Java API library for the Raspberry Pi camera.</description>
