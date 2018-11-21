@@ -16,18 +16,23 @@ utility.
 This project is unofficial and is not affiliated in any way with the Raspberry
 Pi Foundation.
 
+Installation
+------------
+
+Add the following Maven dependency to your project:
+
+    <dependencies>
+        <dependency>
+            <groupId>uk.co.caprica</groupId>
+            <artifactId>picam</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+    </dependencies>
+
 Basic Usage
 -----------
 
 More detailed installation and usage instructions will be provided soon.
-
-Add the library jar file and its dependencies to your project class-path:
-
- * picam-&lt;version>-SNAPSHOT.jar
- * jna-4.2.1.jar
- * logback-classic-1.1.7.jar
- * logback-core-1.1.7.jar
- * slf4j-api-1.7.20.jar
 
 Using the library is simple, essentially:
 
@@ -47,9 +52,7 @@ Captured images can be directly saved to disk, or returned and processed as a
 Status
 ------
 
-The project status is currently pre-alpha and experimental.
-
-The API is subject to change.
+The current API should be considered alpha, it is stable but is still subject to change.
 
 Feedback is welcome at the [github project](https://github.com/caprica/picam).
 
@@ -82,17 +85,6 @@ support over time:
 - [ ] EXIF tags
 - [x] initial capture delay (time for the sensor to 'settle')
 - [ ] raw capture
-
-Installation
-------------
-
-At the present time you need to clone this github repository and use Maven to
-build your own distribution.
-
-Follow the normal github instructions to clone the repository then simply type
-`mvn install` to build a distribution package. You can than transfer that
-package archive to the Pi, uncompress it and start using the camera from your
-Java applications.
 
 Trademark Acknowledgement
 -------------------------
