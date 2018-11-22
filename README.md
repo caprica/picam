@@ -25,7 +25,7 @@ Add the following Maven dependency to your project:
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.1</version>
         </dependency>
     </dependencies>
 
@@ -48,7 +48,7 @@ You can supply as much or as little configuration as you want, sensible defaults
 Next, create a `Camera` with that configuration:
 ```
 try (Camera camera = new Camera(config)) {
-    camera.takePicture(new FilePictureCaptureHandler(new File("picam.png")));
+    camera.takePicture(new FilePictureCaptureHandler(new File("picam.jpg")));
 }
 ```
 Note that you can change the camera configuration directly after creating the camera if you need to.
