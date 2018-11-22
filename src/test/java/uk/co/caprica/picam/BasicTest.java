@@ -21,6 +21,7 @@ package uk.co.caprica.picam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.co.caprica.picam.enums.Encoding;
 
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 
@@ -45,7 +46,7 @@ public class BasicTest {
         logger.info("BasicTest()");
 
         if (args.length !=3) {
-            System.err.println("Usage:  <width> <height> <count>");
+            System.err.println("Usage: <width> <height> <count>");
             System.exit(1);
         }
 
@@ -58,6 +59,8 @@ public class BasicTest {
             .width(width)
             .height(height)
             .delay(5)
+            .encoding(Encoding.JPEG)
+            .quality(85)
 //            .brightness(50)
 //            .contrast(-30)
 //            .saturation(80)
@@ -77,7 +80,7 @@ public class BasicTest {
 //              .crop(0.25f, 0.25f, 0.5f, 0.5f);
                 ;
 
-        PictureCaptureHandler pictureCaptureHandler = new SequentialFilePictureCaptureHandler("image-%04d.png");
+        PictureCaptureHandler pictureCaptureHandler = new SequentialFilePictureCaptureHandler("image-%04d.jpg");
 
         try (Camera camera = new Camera(config)) {
             logger.info("created camera " + camera);

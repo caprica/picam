@@ -32,8 +32,6 @@ import java.awt.geom.Rectangle2D;
 
 import static uk.co.caprica.picam.enums.Encoding.PNG;
 
-// FIXME encoding quality?
-
 public final class CameraConfiguration {
 
     private static final Integer DEFAULT_WIDTH = 2592;
@@ -47,6 +45,8 @@ public final class CameraConfiguration {
     private Integer height = DEFAULT_HEIGHT;
 
     private Encoding encoding = PNG;
+
+    private Integer quality;
 
     private StereoscopicMode stereoscopicMode;
 
@@ -116,6 +116,14 @@ public final class CameraConfiguration {
 
     public CameraConfiguration encoding(Encoding encoding) {
         this.encoding = encoding;
+        return this;
+    }
+
+    public CameraConfiguration quality(Integer quality) {
+        if (quality < 0 || quality > 100) {
+            throw new IllegalArgumentException("Quality must be in the range 0 to 100");
+        }
+        this.quality = quality;
         return this;
     }
 
@@ -255,6 +263,10 @@ public final class CameraConfiguration {
 
     public Encoding encoding() {
         return encoding;
+    }
+
+    public Integer quality() {
+        return quality;
     }
 
     public Integer brightness() {

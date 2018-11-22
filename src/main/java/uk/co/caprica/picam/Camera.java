@@ -65,6 +65,7 @@ import static uk.co.caprica.picam.bindings.LibMmalUtil.mmalUtil;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAMERA_CUSTOM_SENSOR_CONFIG;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAMERA_NUM;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAPTURE;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_JPEG_Q_FACTOR;
 import static uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_CAMERA_CONFIG_TIMESTAMP_MODE_T.MMAL_PARAM_TIMESTAMP_MODE_RESET_STC;
 import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
 import static uk.co.caprica.picam.enums.Encoding.OPAQUE;
@@ -219,6 +220,10 @@ public final class Camera implements AutoCloseable {
 
         if (mmal.mmal_port_format_commit(encoderOutputPort) != MMAL_SUCCESS) {
             throw new RuntimeException("Failed to commit encoder output port format");
+        }
+
+        if (configuration.quality() != null) {
+            mmal_port_parameter_set_uint32(encoderOutputPort, MMAL_PARAMETER_JPEG_Q_FACTOR, configuration.quality());
         }
 
         enableComponent(encoderComponent);
