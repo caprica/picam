@@ -34,25 +34,46 @@ Basic Usage
 
 More detailed installation and usage instructions will be provided soon.
 
-Using the library is simple, essentially:
+Using the library is simple, first you create a `CameraConfiguration` using a convenient "builder" approach:
 
 ```
 CameraConfiguration config = cameraConfiguration()
     .width(1920)
-    .height(1080);
+    .height(1080)
+    .encoding(Encoding.JPEG)
+    .quality(85)
+```
+You can supply as much or as little configuration as you want, sensible defaults will be provided where needed.
 
+Next, create a `Camera` with that configuration:
+```
 try (Camera camera = new Camera(config)) {
     camera.takePicture(new FilePictureCaptureHandler(new File("picam.png")));
 }
 ```
+Note that you can change the camera configuration directly after creating the camera if you need to.
 
 Captured images can be directly saved to disk, or returned and processed as a
 `byte[]`.
 
+The above example used a `FilePictureCaptureHandler` that saves the captured picture directly to disk. You are
+free to provide your own implementations of a `PictureCaptureHandler` to suit your own needs.
+
+That example also created a camera, took only a single picture and automatically cleaned up the camera since `Camera`
+implements `AutoCloseable`. There is no reason why you couldn't keep a camera component and take multiple pictures
+before finally closing the camera yourself. It is important that whichever approach you use you close the camera when
+you are finished using it to free up the camera and associated resources.
+
+If the colouration of your captured images looks a bit "off", try setting a `delay` value on the `CameraConfiguration` - the
+delay value is used to give the camera sensor time to "settle" before capturing the image. Even a delay as small as 5ms can
+make a significant difference.
+
 Status
 ------
 
-The current API should be considered alpha, it is stable but is still subject to change.
+The current API should be considered alpha, it is stable but nevertheless is still subject to change.
+
+Thousands upon thousands of images have been captured with no problems.
 
 Feedback is welcome at the [github project](https://github.com/caprica/picam).
 
@@ -60,7 +81,8 @@ Not all camera features or effects are implemented, the aim is to add more
 support over time:
 
 - [x] image width/height
-- [ ] image encoding (hard-coded to PNG currently)
+- [x] image encoding
+- [x] encoding quality (for JPEG encoding)
 - [ ] stereo mode
 - [x] brightness
 - [x] contrast
@@ -75,7 +97,7 @@ support over time:
 - [x] dynamic range compression strength
 - [x] automatic white balance modes
 - [ ] automatic white balance red/blue gain
-- [-] image effects (most, but not all, are working)
+- [ ] image effects (most, but not all those available, are already working)
 - [ ] image effect parameters
 - [ ] colour effects
 - [x] flip horizontally/vertically
