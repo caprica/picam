@@ -52,7 +52,7 @@ public class MMAL_PARAMETER_HEADER_T extends Structure {
 	}
 
     @Override
-    protected List<?> getFieldOrder() {
+    protected List<String> getFieldOrder() {
         return FIELD_ORDER;
     }
 }
