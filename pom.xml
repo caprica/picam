@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    picam pom.
+
+    Add the following content to your own project pom.xml file:
+
+    <dependencies>
+        <dependency>
+            <groupId>uk.co.caprica</groupId>
+            <artifactId>picam</artifactId>
+            <version>0.1.2</version>
+        </dependency>
+    </dependencies>
+-->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -10,8 +22,8 @@
         <version>9</version>
     </parent>
 
-    <artifactId>picam</artifactId>
     <groupId>uk.co.caprica</groupId>
+    <artifactId>picam</artifactId>
     <version>0.1.2-SNAPSHOT</version>
 
     <name>picam</name>
