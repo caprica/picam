@@ -97,8 +97,7 @@ support over time:
 - [x] dynamic range compression strength
 - [x] automatic white balance modes
 - [x] automatic white balance red/blue gain
-- [ ] image effects (most, but not all those available, are already working)
-- [ ] image effect parameters
+- [x] image effects
 - [x] colour effects
 - [x] flip horizontally/vertically
 - [x] rotation (90 degree steps)
