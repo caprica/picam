@@ -28,11 +28,13 @@ import org.slf4j.LoggerFactory;
 import uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_COMPONENT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_CAMERA_CONFIG_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_FPS_RANGE_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_POOL_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_VIDEO_FORMAT_T;
 
 import static uk.co.caprica.picam.AlignUtils.alignUp;
+import static uk.co.caprica.picam.CameraParameterUtils.setAutomaticWhiteBalanceGains;
 import static uk.co.caprica.picam.CameraParameterUtils.setAutomaticWhiteBalanceMode;
 import static uk.co.caprica.picam.CameraParameterUtils.setBrightness;
 import static uk.co.caprica.picam.CameraParameterUtils.setContrast;
@@ -41,6 +43,7 @@ import static uk.co.caprica.picam.CameraParameterUtils.setDynamicRangeCompressio
 import static uk.co.caprica.picam.CameraParameterUtils.setExposureCompensation;
 import static uk.co.caprica.picam.CameraParameterUtils.setExposureMeteringMode;
 import static uk.co.caprica.picam.CameraParameterUtils.setExposureMode;
+import static uk.co.caprica.picam.CameraParameterUtils.setFpsRange;
 import static uk.co.caprica.picam.CameraParameterUtils.setImageEffect;
 import static uk.co.caprica.picam.CameraParameterUtils.setIso;
 import static uk.co.caprica.picam.CameraParameterUtils.setMirror;
@@ -48,6 +51,7 @@ import static uk.co.caprica.picam.CameraParameterUtils.setRotation;
 import static uk.co.caprica.picam.CameraParameterUtils.setSaturation;
 import static uk.co.caprica.picam.CameraParameterUtils.setSharpness;
 import static uk.co.caprica.picam.CameraParameterUtils.setShutterSpeed;
+import static uk.co.caprica.picam.CameraParameterUtils.setStereoscopicMode;
 import static uk.co.caprica.picam.CameraParameterUtils.setVideoStabilisation;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_boolean;
@@ -65,6 +69,7 @@ import static uk.co.caprica.picam.bindings.LibMmalUtil.mmalUtil;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAMERA_CUSTOM_SENSOR_CONFIG;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAMERA_NUM;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAPTURE;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_FPS_RANGE;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_JPEG_Q_FACTOR;
 import static uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_CAMERA_CONFIG_TIMESTAMP_MODE_T.MMAL_PARAM_TIMESTAMP_MODE_RESET_STC;
 import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
@@ -246,6 +251,8 @@ public final class Camera implements AutoCloseable {
 
         cameraComponent = createComponent(MMAL_COMPONENT_DEFAULT_CAMERA);
 
+        setStereoscopicMode(cameraComponent, configuration.stereoscopicMode(), configuration.decimate(), configuration.swapEyes());
+
         mmal_port_parameter_set_int32(cameraComponent.control, MMAL_PARAMETER_CAMERA_NUM, 0);
         mmal_port_parameter_set_uint32(cameraComponent.control, MMAL_PARAMETER_CAMERA_CUSTOM_SENSOR_CONFIG, 0);
 
@@ -306,6 +313,7 @@ public final class Camera implements AutoCloseable {
         setExposureCompensation(cameraComponent, configuration.exposureCompensation());
         setDynamicRangeCompressionStrength(cameraComponent, configuration.dynamicRangeCompressionStrength());
         setAutomaticWhiteBalanceMode(cameraComponent, configuration.automaticWhiteBalanceMode());
+        setAutomaticWhiteBalanceGains(cameraComponent, configuration.automaticWhiteBalanceRedGain(), configuration.automaticWhiteBalanceBlueGain());
         setImageEffect(cameraComponent, configuration.imageEffect());
         setMirror(cameraComponent, configuration.mirror());
         setRotation(cameraComponent, configuration.rotation());
@@ -314,6 +322,12 @@ public final class Camera implements AutoCloseable {
 
     private void applyCameraCapturePortFormat() {
         logger.debug("applyCameraCapturePortFormat()");
+
+        if (configuration.shutterSpeed() > 6000000) {
+            setFpsRange(cameraComponent, 50, 1000, 166, 1000);
+        } else if (configuration.shutterSpeed() > 1000000) {
+            setFpsRange(cameraComponent, 167, 1000, 999, 1000);
+        }
 
         cameraCapturePort.format.encoding = OPAQUE.value();
         cameraCapturePort.format.es.video.width = alignUp(configuration.width(), ALIGN_WIDTH);

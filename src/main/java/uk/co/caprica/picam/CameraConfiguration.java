@@ -50,6 +50,10 @@ public final class CameraConfiguration {
 
     private StereoscopicMode stereoscopicMode;
 
+    private Boolean decimate;
+
+    private Boolean swapEyes;
+
     private Integer brightness;
 
     private Integer contrast;
@@ -74,9 +78,9 @@ public final class CameraConfiguration {
 
     private AutomaticWhiteBalanceMode automaticWhiteBalanceMode;
 
-    private float automaticWhiteBalanceRedGain;
+    private Float automaticWhiteBalanceRedGain;
 
-    private float automaticWhiteBalanceBlueGain;
+    private Float automaticWhiteBalanceBlueGain;
 
     private ImageEffect imageEffect;
 
@@ -127,8 +131,10 @@ public final class CameraConfiguration {
         return this;
     }
 
-    public CameraConfiguration stereoscopicMode(StereoscopicMode stereoscopicMode) {
+    public CameraConfiguration stereoscopicMode(StereoscopicMode stereoscopicMode, Boolean decimate, Boolean swapEyes) {
         this.stereoscopicMode = stereoscopicMode;
+        this.decimate = decimate;
+        this.swapEyes = swapEyes;
         return this;
     }
 
@@ -164,9 +170,13 @@ public final class CameraConfiguration {
         return this;
     }
 
-    // FIXME naming conflict videoStabilisation? can i do anything better rather than get/set/is ?
-    public CameraConfiguration stabiliseVideo() {
+    public CameraConfiguration vdieoStabilsation() {
         this.videoStabilisation = true;
+        return this;
+    }
+
+    public CameraConfiguration vdieoStabilsation(Boolean videoStabilisation) {
+        this.videoStabilisation = videoStabilisation;
         return this;
     }
 
@@ -218,7 +228,7 @@ public final class CameraConfiguration {
         return this;
     }
 
-    public CameraConfiguration automaticWhiteBalanceGain(float automaticWhiteBalanceRedGain, float automaticWhiteBalanceBlueGain) {
+    public CameraConfiguration automaticWhiteBalanceGains(float automaticWhiteBalanceRedGain, float automaticWhiteBalanceBlueGain) {
         this.automaticWhiteBalanceRedGain = automaticWhiteBalanceRedGain;
         this.automaticWhiteBalanceBlueGain = automaticWhiteBalanceBlueGain;
         return this;
@@ -269,6 +279,18 @@ public final class CameraConfiguration {
         return quality;
     }
 
+    public StereoscopicMode stereoscopicMode() {
+        return stereoscopicMode;
+    }
+
+    public Boolean decimate() {
+        return decimate;
+    }
+
+    public Boolean swapEyes() {
+        return swapEyes;
+    }
+
     public Integer brightness() {
         return brightness;
     }
@@ -315,6 +337,14 @@ public final class CameraConfiguration {
 
     public AutomaticWhiteBalanceMode automaticWhiteBalanceMode() {
         return automaticWhiteBalanceMode;
+    }
+
+    public Float automaticWhiteBalanceRedGain() {
+        return automaticWhiteBalanceRedGain;
+    }
+
+    public Float automaticWhiteBalanceBlueGain() {
+        return automaticWhiteBalanceBlueGain;
     }
 
     public ImageEffect imageEffect() {

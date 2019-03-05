@@ -47,7 +47,6 @@ import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
 // stereoscopic is set right at the START
 
 // FIXME handle null-checks were applicable, e.g. boxing on boolean ?
-// FIXME special cases for shutter-speed etc?
 
 class CameraParameterUtils {
 
@@ -62,9 +61,11 @@ class CameraParameterUtils {
         logger.debug("setStereoscopicMode(stereoscopicMode={},decimate={},swapEyes={})", stereoscopicMode, decimate, swapEyes);
 
         MMAL_PARAMETER_STEREOSCOPIC_MODE_T param = new MMAL_PARAMETER_STEREOSCOPIC_MODE_T();
-        param.mode = stereoscopicMode.value();
-        param.decimate = decimate ? 1 : 0;
-        param.swap_eyes = swapEyes ? 1 : 0;
+        if (stereoscopicMode != StereoscopicMode.NONE) {
+            param.mode = stereoscopicMode.value();
+            param.decimate = decimate ? 1 : 0;
+            param.swap_eyes = swapEyes ? 1 : 0;
+        }
         param.write();
 
         checkResult("Stereoscopic Mode", mmal.mmal_port_parameter_set(getCameraCapturePort(camera), param.hdr));
@@ -192,16 +193,24 @@ class CameraParameterUtils {
         }
     }
 
-    static void setAutomaticWhiteBalanceGains(MMAL_COMPONENT_T camera, float redGain, float blueGain) {
+    static void setAutomaticWhiteBalanceGains(MMAL_COMPONENT_T camera, Float redGain, Float blueGain) {
         logger.debug("setAutomaticWhiteBalanceGains(redGain={},blueGain={})", redGain, blueGain);
 
-        MMAL_PARAMETER_AWB_GAINS_T param = new MMAL_PARAMETER_AWB_GAINS_T();
-        param.r_gain.num = (int)(redGain * 65536);
-        param.r_gain.den = 65536;
-        param.b_gain.num = (int)(blueGain * 65536);
-        param.b_gain.den = 65536;
+        if (redGain != null || blueGain != null) {
+            MMAL_PARAMETER_AWB_GAINS_T param = new MMAL_PARAMETER_AWB_GAINS_T();
 
-        checkResult("Automatic White Balance Gains", mmal_port_parameter_set(camera.control, param));
+            if (redGain != null) {
+                param.r_gain.num = (int) (redGain * 65536);
+                param.r_gain.den = 65536;
+            }
+
+            if (blueGain != null) {
+                param.b_gain.num = (int) (blueGain * 65536);
+                param.b_gain.den = 65536;
+            }
+
+            checkResult("Automatic White Balance Gains", mmal_port_parameter_set(camera.control, param));
+        }
     }
 
     static void setImageEffect(MMAL_COMPONENT_T camera, ImageEffect imageEffect) {
@@ -266,6 +275,18 @@ class CameraParameterUtils {
 
             checkResult("Colour Effect", mmal.mmal_port_parameter_set(camera.control, param.hdr));
         }
+    }
+
+    static void setFpsRange(MMAL_COMPONENT_T camera, int lowNum, int lowDen, int highNum, int highDen) {
+        logger.debug("setFpsRange(lowNum={},lowDen={},highNum={},highDen={})", lowNum, lowDen, highNum, highDen);
+
+        MMAL_PARAMETER_FPS_RANGE_T param = new MMAL_PARAMETER_FPS_RANGE_T();
+        param.fps_low.num = lowNum;
+        param.fps_low.den = lowDen;
+        param.fps_high.num = highNum;
+        param.fps_high.den = highDen;
+
+        checkResult("FPS Range", mmal.mmal_port_parameter_set(getCameraCapturePort(camera), param.hdr));
     }
 
     private static void checkRange(String name, Integer min, Integer max, Integer value) {

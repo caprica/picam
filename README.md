@@ -25,7 +25,7 @@ Add the following Maven dependency to your project:
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>0.1.2</version>
+            <version>0.1.3</version>
         </dependency>
     </dependencies>
 
@@ -83,20 +83,20 @@ support over time:
 - [x] image width/height
 - [x] image encoding
 - [x] encoding quality (for JPEG encoding)
-- [ ] stereo mode
+- [x] stereo mode
 - [x] brightness
 - [x] contrast
 - [x] saturation
 - [x] sharpness
 - [x] video stabilisation
-- [ ] shutter speed
+- [x] shutter speed
 - [x] ISO
 - [x] exposure mode
 - [x] exposure metering mode
 - [x] exposure compensation
 - [x] dynamic range compression strength
 - [x] automatic white balance modes
-- [ ] automatic white balance red/blue gain
+- [x] automatic white balance red/blue gain
 - [ ] image effects (most, but not all those available, are already working)
 - [ ] image effect parameters
 - [ ] colour effects
