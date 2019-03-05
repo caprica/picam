@@ -92,8 +92,13 @@ public final class CameraConfiguration {
 
     private Integer delay = DEFAULT_DELAY;
 
-//    private Integer imageEffectsParameters;
-//    private Integer colourEffects;
+    private Boolean colourEffect;
+
+    private Integer u;
+
+    private Integer v;
+
+    //    private Integer imageEffectsParameters;
 
     private CameraConfiguration() {
     }
@@ -239,6 +244,13 @@ public final class CameraConfiguration {
         return this;
     }
 
+    public CameraConfiguration colourEffect(Boolean enable, Integer u, Integer v) {
+        this.colourEffect = enable;
+        this.u = u;
+        this.v = v;
+        return this;
+    }
+
     public CameraConfiguration mirror(Mirror mirror) {
         this.mirror = mirror;
         return this;
@@ -351,6 +363,18 @@ public final class CameraConfiguration {
         return imageEffect;
     }
 
+    public Boolean colourEffect() {
+        return colourEffect;
+    }
+
+    public Integer u() {
+        return u;
+    }
+
+    public Integer v() {
+        return v;
+    }
+
     public Mirror mirror() {
         return mirror;
     }
@@ -366,4 +390,5 @@ public final class CameraConfiguration {
     public Integer delay() {
         return delay;
     }
+
 }

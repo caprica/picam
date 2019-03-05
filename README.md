@@ -99,7 +99,7 @@ support over time:
 - [x] automatic white balance red/blue gain
 - [ ] image effects (most, but not all those available, are already working)
 - [ ] image effect parameters
-- [ ] colour effects
+- [x] colour effects
 - [x] flip horizontally/vertically
 - [x] rotation (90 degree steps)
 - [ ] crop (region of interest)
