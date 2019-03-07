@@ -7,7 +7,7 @@
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>0.1.3</version>
+            <version>0.1.4</version>
         </dependency>
     </dependencies>
 -->
