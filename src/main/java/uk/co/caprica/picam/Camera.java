@@ -133,7 +133,16 @@ public final class Camera implements AutoCloseable {
         sendBuffersToEncoder();
     }
 
-    public void takePicture(PictureCaptureHandler pictureCaptureHandler) {
+    /**
+     * Take a picture.
+     * <p>
+     * If {@link CaptureFailedException} is thrown, the application should close this camera instance and not use it
+     * again.
+     *
+     * @param pictureCaptureHandler handler used to store the captured image
+     * @throws CaptureFailedException if the capture failed for some reason
+     */
+    public void takePicture(PictureCaptureHandler pictureCaptureHandler) throws CaptureFailedException {
         logger.info(">>> Begin Take Picture >>>");
 
         logger.debug("takePicture()");
@@ -151,24 +160,26 @@ public final class Camera implements AutoCloseable {
                 }
                 catch (InterruptedException e) {
                     logger.error("Interrupted while waiting before capture", e);
+                    throw new CaptureFailedException("Interrupted while waiting before capture", e);
                 }
             }
 
-            pictureCaptureHandler.begin();
+            try {
+                pictureCaptureHandler.begin();
+            }
+            catch (Exception e) {
+                logger.error("Picture capture handler failed to begin", e);
+                throw new CaptureFailedException("Picture capture handler failed to begin", e);
+            }
 
             startCapture();
 
-            try {
-                logger.debug("wait for capture to complete");
-                encoderBufferCallback.waitForCaptureToFinish();
-                logger.info("Capture completed");
-            }
-            catch (InterruptedException e) {
-                logger.warn("Interrupted waiting for capture to finish", e);
-            }
+            logger.debug("wait for capture to complete");
+            encoderBufferCallback.waitForCaptureToFinish(configuration.captureTimeout());
+            logger.info("Capture completed");
         }
-        catch (Exception e) {
-            logger.error("Capture failure", e);
+        catch (CaptureTimeoutException | InterruptedException e) {
+            throw new CaptureFailedException(e);
         }
         finally {
             try {
@@ -405,14 +416,14 @@ public final class Camera implements AutoCloseable {
         }
     }
 
-    private void startCapture() {
+    private void startCapture() throws CaptureFailedException {
         logger.debug("startCapture()");
 
         int result = mmal_port_parameter_set_boolean(cameraCapturePort, MMAL_PARAMETER_CAPTURE, 1);
         logger.debug("result={}", result);
 
         if (result != MMAL_SUCCESS) {
-            throw new RuntimeException("Failed to start capture");
+            throw new CaptureFailedException("Failed to start capture");
         }
 
         logger.info("Capture started");

@@ -28,6 +28,7 @@ import uk.co.caprica.picam.bindings.internal.MMAL_PORT_BH_CB_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import static uk.co.caprica.picam.bindings.LibMmal.mmal;
 import static uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_FLAG.MMAL_BUFFER_HEADER_FLAG_FRAME_END;
@@ -52,8 +53,15 @@ class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
         this.pictureCaptureHandler = pictureCaptureHandler;
     }
 
-    void waitForCaptureToFinish() throws InterruptedException {
-        captureFinishedSemaphore.acquire();
+    void waitForCaptureToFinish(int captureTimeout) throws InterruptedException, CaptureTimeoutException {
+        if (captureTimeout >= 0) {
+            boolean acquired = captureFinishedSemaphore.tryAcquire(captureTimeout, TimeUnit.MILLISECONDS);
+            if (!acquired) {
+                throw new CaptureTimeoutException();
+            }
+        } else {
+            captureFinishedSemaphore.acquire();
+        }
     }
 
     @Override

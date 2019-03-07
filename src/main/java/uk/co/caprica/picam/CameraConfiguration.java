@@ -98,6 +98,8 @@ public final class CameraConfiguration {
 
     private Integer v;
 
+    private Integer captureTimeout = -1;
+
     //    private Integer imageEffectsParameters;
 
     private CameraConfiguration() {
@@ -271,6 +273,11 @@ public final class CameraConfiguration {
         return this;
     }
 
+    public CameraConfiguration captureTimeout(Integer captureTimeout) {
+        this.captureTimeout = captureTimeout;
+        return this;
+    }
+
     public Camera camera() {
         return new Camera(this);
     }
@@ -389,6 +396,10 @@ public final class CameraConfiguration {
 
     public Integer delay() {
         return delay;
+    }
+
+    public Integer captureTimeout() {
+        return captureTimeout;
     }
 
 }
