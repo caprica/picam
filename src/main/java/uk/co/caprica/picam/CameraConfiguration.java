@@ -48,11 +48,11 @@ public final class CameraConfiguration {
 
     private Integer quality;
 
-    private StereoscopicMode stereoscopicMode;
+    private StereoscopicMode stereoscopicMode = StereoscopicMode.NONE;
 
-    private Boolean decimate;
+    private Boolean decimate = Boolean.FALSE;
 
-    private Boolean swapEyes;
+    private Boolean swapEyes = Boolean.FALSE;
 
     private Integer brightness;
 

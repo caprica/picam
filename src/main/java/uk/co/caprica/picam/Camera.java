@@ -335,10 +335,12 @@ public final class Camera implements AutoCloseable {
     private void applyCameraCapturePortFormat() {
         logger.debug("applyCameraCapturePortFormat()");
 
-        if (configuration.shutterSpeed() > 6000000) {
-            setFpsRange(cameraComponent, 50, 1000, 166, 1000);
-        } else if (configuration.shutterSpeed() > 1000000) {
-            setFpsRange(cameraComponent, 167, 1000, 999, 1000);
+        if (configuration.shutterSpeed() != null) {
+            if (configuration.shutterSpeed() > 6000000) {
+                setFpsRange(cameraComponent, 50, 1000, 166, 1000);
+            } else if (configuration.shutterSpeed() > 1000000) {
+                setFpsRange(cameraComponent, 167, 1000, 999, 1000);
+            }
         }
 
         cameraCapturePort.format.encoding = OPAQUE.value();
