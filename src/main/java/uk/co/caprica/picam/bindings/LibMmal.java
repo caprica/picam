@@ -14,22 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with picam.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2016 Caprica Software Limited.
+ * Copyright 2016-2019 Caprica Software Limited.
  */
 
 package uk.co.caprica.picam.bindings;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.NativeLibrary;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 import uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_COMPONENT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_ES_FORMAT_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_HEADER_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_BH_CB_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
-import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_HEADER_T;
 
 public interface LibMmal extends Library {
 

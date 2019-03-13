@@ -19,10 +19,6 @@
 
 package uk.co.caprica.picam;
 
-import uk.co.caprica.picam.ByteArrayPictureCaptureHandler;
-import uk.co.caprica.picam.Camera;
-import uk.co.caprica.picam.CaptureFailedException;
-import uk.co.caprica.picam.PictureCaptureHandler;
 import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
 import uk.co.caprica.picam.enums.Encoding;
 import uk.co.caprica.picam.enums.ExposureMeteringMode;

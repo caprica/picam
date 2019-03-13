@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with picam.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2016 Caprica Software Limited.
+ * Copyright 2016-2019 Caprica Software Limited.
  */
 
 package uk.co.caprica.picam;
@@ -23,8 +23,19 @@ import com.sun.jna.Pointer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.caprica.picam.bindings.internal.MMAL_COMPONENT_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_AWBMODE_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_AWB_GAINS_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_COLOURFX_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_DRC_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_EXPOSUREMETERINGMODE_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_EXPOSUREMODE_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_FPS_RANGE_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_IMAGEFX_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_INPUT_CROP_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_MIRROR_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_STEREOSCOPIC_MODE_T;
-import uk.co.caprica.picam.bindings.internal.*;
+import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
+import uk.co.caprica.picam.bindings.internal.MMAL_RATIONAL_T;
 import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
 import uk.co.caprica.picam.enums.DynamicRangeCompressionStrength;
 import uk.co.caprica.picam.enums.ExposureMeteringMode;
@@ -36,12 +47,20 @@ import uk.co.caprica.picam.enums.StereoscopicMode;
 import java.awt.geom.Rectangle2D;
 
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set;
-import static uk.co.caprica.picam.bindings.LibMmal.mmal;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_boolean;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_int32;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_rational;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_uint32;
-import static uk.co.caprica.picam.bindings.MmalParameters.*;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_BRIGHTNESS;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CONTRAST;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_EXPOSURE_COMP;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_ISO;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_ROTATION;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_SATURATION;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_SHARPNESS;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_SHUTTER_SPEED;
+import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_VIDEO_STABILISATION;
 import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
 
 // stereoscopic is set right at the START

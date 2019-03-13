@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with picam.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2016 Caprica Software Limited.
+ * Copyright 2016-2019 Caprica Software Limited.
  */
 
 package uk.co.caprica.picam;
 
-import uk.co.caprica.picam.enums.Encoding;
-import uk.co.caprica.picam.enums.ExposureMode;
 import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
 import uk.co.caprica.picam.enums.DynamicRangeCompressionStrength;
+import uk.co.caprica.picam.enums.Encoding;
 import uk.co.caprica.picam.enums.ExposureMeteringMode;
+import uk.co.caprica.picam.enums.ExposureMode;
 import uk.co.caprica.picam.enums.ImageEffect;
 import uk.co.caprica.picam.enums.Mirror;
 import uk.co.caprica.picam.enums.StereoscopicMode;
