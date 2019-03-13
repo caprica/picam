@@ -143,7 +143,7 @@ public final class Camera implements AutoCloseable {
      * a time accesses the camera.
      * <p>
      * If {@link CaptureFailedException} is thrown, the application should close this camera instance and not use it
-     * again.
+     * again. If this happens, creating a new camera instance and resuming captures should work.
      *
      * @param pictureCaptureHandler handler used to store the captured image
      * @throws CaptureFailedException if the capture failed for some reason
