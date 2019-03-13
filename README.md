@@ -25,7 +25,7 @@ Add the following Maven dependency to your project:
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.5</version>
         </dependency>
     </dependencies>
 
@@ -67,6 +67,9 @@ you are finished using it to free up the camera and associated resources.
 If the colouration of your captured images looks a bit "off", try setting a `delay` value on the `CameraConfiguration` - the
 delay value is used to give the camera sensor time to "settle" before capturing the image. Even a delay as small as 5ms can
 make a significant difference.
+
+The `Camera` instance is obviously *not thread-safe*. You must not attempt to use the camera from multiple threads at
+the same time.
 
 Status
 ------
@@ -115,6 +118,6 @@ Raspberry Pi is a trademark of the Raspberry Pi Foundation.
 Demo Application
 ----------------
 
-This screen-shot shows a Java web application running on the Pi:
+This screenshot shows a Java web application running on the Pi:
 
 ![picam-demo](https://github.com/caprica/picam/raw/master/etc/demo.png "picam-demo")

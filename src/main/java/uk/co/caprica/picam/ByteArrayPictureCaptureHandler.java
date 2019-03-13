@@ -21,7 +21,7 @@ package uk.co.caprica.picam;
 
 import java.io.ByteArrayOutputStream;
 
-public class ByteArrayPictureCaptureHandler implements PictureCaptureHandler<ByteArrayOutputStream> {
+public class ByteArrayPictureCaptureHandler implements PictureCaptureHandler<byte[]> {
 
     private final Integer initialSize;
 
@@ -50,7 +50,8 @@ public class ByteArrayPictureCaptureHandler implements PictureCaptureHandler<Byt
     }
 
     @Override
-    public ByteArrayOutputStream result() {
-        return out;
+    public byte[] result() {
+        return out.toByteArray();
     }
+
 }
