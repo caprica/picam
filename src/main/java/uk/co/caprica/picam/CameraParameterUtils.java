@@ -63,8 +63,6 @@ import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_SHUTTER
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_VIDEO_STABILISATION;
 import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
 
-// stereoscopic is set right at the START
-
 // FIXME handle null-checks were applicable, e.g. boxing on boolean ?
 
 class CameraParameterUtils {
