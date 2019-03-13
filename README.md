@@ -16,6 +16,11 @@ utility.
 This project is unofficial and is not affiliated in any way with the Raspberry
 Pi Foundation.
 
+News
+----
+
+13th March, 2019 - new release 0.1.5 available at [Maven Cental](https://search.maven.org/search?q=a:picam)
+
 Installation
 ------------
 
