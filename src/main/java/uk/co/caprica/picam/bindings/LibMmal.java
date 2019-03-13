@@ -35,9 +35,7 @@ public interface LibMmal extends Library {
 
     String LIBRARY_NAME = "mmal";
 
-    LibMmal mmal = (LibMmal) Native.loadLibrary(LIBRARY_NAME, LibMmal.class);
-
-    NativeLibrary JNA_NATIVE_LIB = NativeLibrary.getInstance(LIBRARY_NAME);
+    LibMmal mmal = Native.load(LIBRARY_NAME, LibMmal.class);
 
     int mmal_component_create(String name, PointerByReference component);
 
@@ -70,4 +68,5 @@ public interface LibMmal extends Library {
     void mmal_buffer_header_mem_unlock(Pointer header);
 
     void mmal_buffer_header_release(Pointer header);
+
 }
