@@ -31,9 +31,7 @@ public interface LibMmalUtil extends Library {
 
 	String JNA_LIBRARY_NAME = "mmal_util";
 
-	NativeLibrary JNA_NATIVE_LIB = NativeLibrary.getInstance(LibMmalUtil.JNA_LIBRARY_NAME);
-
-	LibMmalUtil mmalUtil = (LibMmalUtil)Native.loadLibrary(LibMmalUtil.JNA_LIBRARY_NAME, LibMmalUtil.class);
+	LibMmalUtil mmalUtil = Native.load(LibMmalUtil.JNA_LIBRARY_NAME, LibMmalUtil.class);
 
 	MMAL_POOL_T mmal_port_pool_create(MMAL_PORT_T port, int headers, int payload_size);
 
@@ -46,4 +44,5 @@ public interface LibMmalUtil extends Library {
 	int mmal_connection_disable(Pointer connection);
 
 	int mmal_connection_destroy(Pointer connection);
+
 }
