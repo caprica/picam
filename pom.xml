@@ -7,7 +7,7 @@
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.5</version>
         </dependency>
     </dependencies>
 -->
@@ -154,6 +154,7 @@
                     <javadocVersion>1.8</javadocVersion>
                     <quiet>true</quiet>
                     <failOnError>true</failOnError>
+                    <additionalOptions>-html5</additionalOptions>
                 </configuration>
                 <executions>
                     <execution>
