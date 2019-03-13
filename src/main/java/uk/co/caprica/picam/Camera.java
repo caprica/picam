@@ -28,10 +28,11 @@ import org.slf4j.LoggerFactory;
 import uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_COMPONENT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_CAMERA_CONFIG_T;
-import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_FPS_RANGE_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_POOL_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_VIDEO_FORMAT_T;
+
+import java.util.concurrent.Semaphore;
 
 import static uk.co.caprica.picam.AlignUtils.alignUp;
 import static uk.co.caprica.picam.CameraParameterUtils.setAutomaticWhiteBalanceGains;
@@ -103,6 +104,8 @@ public final class Camera implements AutoCloseable {
 
     private final CameraConfiguration configuration;
 
+    private final Semaphore checkSemaphore = new Semaphore(1);
+
     private MMAL_COMPONENT_T encoderComponent;
 
     private MMAL_PORT_T encoderInputPort;
@@ -136,6 +139,9 @@ public final class Camera implements AutoCloseable {
     /**
      * Take a picture.
      * <p>
+     * The camera instance is <em>not</em> thread-safe, client applications <em>must</em> ensure that only one thread at
+     * a time accesses the camera.
+     * <p>
      * If {@link CaptureFailedException} is thrown, the application should close this camera instance and not use it
      * again.
      *
@@ -145,51 +151,16 @@ public final class Camera implements AutoCloseable {
     public void takePicture(PictureCaptureHandler pictureCaptureHandler) throws CaptureFailedException {
         logger.info(">>> Begin Take Picture >>>");
 
-        logger.debug("takePicture()");
-
-        encoderBufferCallback.setPictureCaptureHandler(pictureCaptureHandler);
+        if (!checkSemaphore.tryAcquire()) {
+            logger.error("Attempt to take picture while camera is already busy processing a capture");
+            throw new CaptureFailedException("Camera is already processing a capture");
+        }
 
         try {
-            logger.info("Preparing to capture...");
-
-            Integer delay = configuration.delay();
-            logger.debug("delay={}", delay);
-            if (delay != null && delay > 0) {
-                try {
-                    Thread.sleep(delay);
-                }
-                catch (InterruptedException e) {
-                    logger.error("Interrupted while waiting before capture", e);
-                    throw new CaptureFailedException("Interrupted while waiting before capture", e);
-                }
-            }
-
-            try {
-                pictureCaptureHandler.begin();
-            }
-            catch (Exception e) {
-                logger.error("Picture capture handler failed to begin", e);
-                throw new CaptureFailedException("Picture capture handler failed to begin", e);
-            }
-
-            startCapture();
-
-            logger.debug("wait for capture to complete");
-            encoderBufferCallback.waitForCaptureToFinish(configuration.captureTimeout());
-            logger.info("Capture completed");
-        }
-        catch (CaptureTimeoutException | InterruptedException e) {
-            throw new CaptureFailedException(e);
+            processCapture(pictureCaptureHandler);
         }
         finally {
-            try {
-                pictureCaptureHandler.end();
-            }
-            catch (Exception e) {
-                logger.error("Callback failure after capture finished", e);
-            }
-
-            encoderBufferCallback.setPictureCaptureHandler(null);
+            checkSemaphore.release();
         }
 
         logger.info("<<< End Take Picture <<<");
@@ -415,6 +386,55 @@ public final class Camera implements AutoCloseable {
             if (result != MMAL_SUCCESS) {
                 throw new RuntimeException(String.format("Failed to send buffer %d to encoder output port", i));
             }
+        }
+    }
+
+    private void processCapture(PictureCaptureHandler<?> pictureCaptureHandler) throws CaptureFailedException {
+        logger.debug("processCapture()");
+
+        encoderBufferCallback.setPictureCaptureHandler(pictureCaptureHandler);
+
+        try {
+            logger.info("Preparing to capture...");
+
+            Integer delay = configuration.delay();
+            logger.debug("delay={}", delay);
+            if (delay != null && delay > 0) {
+                try {
+                    Thread.sleep(delay);
+                }
+                catch (InterruptedException e) {
+                    logger.error("Interrupted while waiting before capture", e);
+                    throw new CaptureFailedException("Interrupted while waiting before capture", e);
+                }
+            }
+
+            try {
+                pictureCaptureHandler.begin();
+            }
+            catch (Exception e) {
+                logger.error("Picture capture handler failed to begin", e);
+                throw new CaptureFailedException("Picture capture handler failed to begin", e);
+            }
+
+            startCapture();
+
+            logger.debug("wait for capture to complete");
+            encoderBufferCallback.waitForCaptureToFinish(configuration.captureTimeout());
+            logger.info("Capture completed");
+        }
+        catch (CaptureTimeoutException | InterruptedException e) {
+            throw new CaptureFailedException(e);
+        }
+        finally {
+            try {
+                pictureCaptureHandler.end();
+            }
+            catch (Exception e) {
+                logger.error("Callback failure after capture finished", e);
+            }
+
+            encoderBufferCallback.setPictureCaptureHandler(null);
         }
     }
 
