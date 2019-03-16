@@ -30,7 +30,7 @@ Add the following Maven dependency to your project:
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>0.1.5</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 
