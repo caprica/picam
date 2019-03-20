@@ -37,8 +37,6 @@ Add the following Maven dependency to your project:
 Basic Usage
 -----------
 
-More detailed installation and usage instructions will be provided soon.
-
 Using the library is simple, first you create a `CameraConfiguration` using a convenient "builder" approach:
 
 ```
@@ -73,6 +71,11 @@ make a significant difference.
 
 The `Camera` instance is obviously *not thread-safe*. You must not attempt to use the camera from multiple threads at
 the same time.
+
+Tutorials
+---------
+
+Some new tutorials are available [here](http://capricasoftware.co.uk/projects/picam/tutorials).
 
 Status
 ------
