@@ -19,7 +19,7 @@ Pi Foundation.
 News
 ----
 
-13th March, 2019 - new release 0.1.5 available at [Maven Cental](https://search.maven.org/search?q=a:picam)
+16th March, 2019 - new release 1.0.0 available at [Maven Cental](https://search.maven.org/search?q=a:picam)
 
 Installation
 ------------
@@ -56,8 +56,6 @@ try (Camera camera = new Camera(config)) {
     camera.takePicture(new FilePictureCaptureHandler(new File("picam.jpg")));
 }
 ```
-Note that you can change the camera configuration directly after creating the camera if you need to.
-
 Captured images can be directly saved to disk, or returned and processed as a
 `byte[]`.
 
