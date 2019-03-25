@@ -19,30 +19,28 @@
 
 package uk.co.caprica.picam.bindings;
 
-import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.NativeLibrary;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 import uk.co.caprica.picam.bindings.internal.MMAL_POOL_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 
-public interface LibMmalUtil extends Library {
+public final class LibMmalUtil {
 
-	String JNA_LIBRARY_NAME = "mmal_util";
+	static {
+		Native.register("mmal_util");
+	}
 
-	LibMmalUtil mmalUtil = Native.load(LibMmalUtil.JNA_LIBRARY_NAME, LibMmalUtil.class);
+	public static native MMAL_POOL_T mmal_port_pool_create(MMAL_PORT_T port, int headers, int payload_size);
 
-	MMAL_POOL_T mmal_port_pool_create(MMAL_PORT_T port, int headers, int payload_size);
+	public static native void mmal_port_pool_destroy(MMAL_PORT_T port, MMAL_POOL_T pool);
 
-	void mmal_port_pool_destroy(MMAL_PORT_T port, MMAL_POOL_T pool);
+	public static native int mmal_connection_create(PointerByReference connection, MMAL_PORT_T out, MMAL_PORT_T in, int flags);
 
-	int mmal_connection_create(PointerByReference connection, MMAL_PORT_T out, MMAL_PORT_T in, int flags);
+	public static native int mmal_connection_enable(Pointer connection);
 
-	int mmal_connection_enable(Pointer connection);
+	public static native int mmal_connection_disable(Pointer connection);
 
-	int mmal_connection_disable(Pointer connection);
-
-	int mmal_connection_destroy(Pointer connection);
+	public static native int mmal_connection_destroy(Pointer connection);
 
 }

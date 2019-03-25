@@ -55,7 +55,6 @@ import static uk.co.caprica.picam.CameraParameterUtils.setSharpness;
 import static uk.co.caprica.picam.CameraParameterUtils.setShutterSpeed;
 import static uk.co.caprica.picam.CameraParameterUtils.setStereoscopicMode;
 import static uk.co.caprica.picam.CameraParameterUtils.setVideoStabilisation;
-import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_boolean;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_int32;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_uint32;
@@ -66,8 +65,14 @@ import static uk.co.caprica.picam.MmalUtils.disableComponent;
 import static uk.co.caprica.picam.MmalUtils.disablePort;
 import static uk.co.caprica.picam.MmalUtils.enableComponent;
 import static uk.co.caprica.picam.MmalUtils.getPort;
-import static uk.co.caprica.picam.bindings.LibMmal.mmal;
-import static uk.co.caprica.picam.bindings.LibMmalUtil.mmalUtil;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_format_copy;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_port_enable;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_port_format_commit;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_port_send_buffer;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_queue_get;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_queue_length;
+import static uk.co.caprica.picam.bindings.LibMmalUtil.mmal_port_pool_create;
+import static uk.co.caprica.picam.bindings.LibMmalUtil.mmal_port_pool_destroy;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAMERA_CUSTOM_SENSOR_CONFIG;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAMERA_NUM;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CAPTURE;
@@ -179,7 +184,7 @@ public final class Camera implements AutoCloseable {
         disableComponent(encoderComponent);
         disableComponent(cameraComponent);
 
-        mmalUtil.mmal_port_pool_destroy(encoderOutputPort, picturePool);
+        mmal_port_pool_destroy(encoderOutputPort, picturePool);
 
         destroyComponent(encoderComponent);
         destroyComponent(cameraComponent);
@@ -196,7 +201,7 @@ public final class Camera implements AutoCloseable {
         encoderOutputPort = getPort(encoderComponent.output.getPointer(0));
         logger.trace("encoderOutputPort={}", encoderOutputPort);
 
-        mmal.mmal_format_copy(encoderOutputPort.format, encoderInputPort.format);
+        mmal_format_copy(encoderOutputPort.format, encoderInputPort.format);
 
         encoderOutputPort.format.encoding = configuration.encoding().value();
         encoderOutputPort.buffer_size = Math.max(encoderOutputPort.buffer_size_recommended, encoderOutputPort.buffer_size_min);
@@ -205,7 +210,7 @@ public final class Camera implements AutoCloseable {
 
         logger.trace("encoderOutputPort={}", encoderOutputPort);
 
-        if (mmal.mmal_port_format_commit(encoderOutputPort) != MMAL_SUCCESS) {
+        if (mmal_port_format_commit(encoderOutputPort) != MMAL_SUCCESS) {
             throw new RuntimeException("Failed to commit encoder output port format");
         }
 
@@ -219,7 +224,7 @@ public final class Camera implements AutoCloseable {
     private void createPicturePool() {
         logger.debug("createPicturePool()");
 
-        picturePool = mmalUtil.mmal_port_pool_create(encoderOutputPort, encoderOutputPort.buffer_num, encoderOutputPort.buffer_size);
+        picturePool = mmal_port_pool_create(encoderOutputPort, encoderOutputPort.buffer_num, encoderOutputPort.buffer_size);
 
         logger.trace("picturePool={}", picturePool);
 
@@ -244,7 +249,7 @@ public final class Camera implements AutoCloseable {
 
         logger.trace("cameraCapturePort={}", cameraCapturePort);
 
-        mmal.mmal_port_enable(cameraComponent.control, cameraControlCallback);
+        mmal_port_enable(cameraComponent.control, cameraControlCallback);
 
         applyCameraControlConfiguration();
         applyCameraConfiguration();
@@ -272,7 +277,7 @@ public final class Camera implements AutoCloseable {
 
         logger.trace("config={}", config);
 
-        int result = mmal_port_parameter_set(cameraComponent.control, config);
+        int result = MmalParameterUtils.mmal_port_parameter_set(cameraComponent.control, config);
         logger.debug("result={}", result);
 
         if (result != MMAL_SUCCESS) {
@@ -329,7 +334,7 @@ public final class Camera implements AutoCloseable {
 
         logger.trace("format={}", cameraCapturePort.format.es.video);
 
-        int result = mmal.mmal_port_format_commit(cameraCapturePort);
+        int result = mmal_port_format_commit(cameraCapturePort);
         logger.debug("result={}", result);
 
         if (result != MMAL_SUCCESS) {
@@ -358,7 +363,7 @@ public final class Camera implements AutoCloseable {
     private void enableEncoderOutput() {
         logger.debug("enableEncoderOutput()");
 
-        int result = mmal.mmal_port_enable(encoderOutputPort, encoderBufferCallback);
+        int result = mmal_port_enable(encoderOutputPort, encoderBufferCallback);
         logger.debug("result={}", result);
 
         if (result != MMAL_SUCCESS) {
@@ -369,18 +374,18 @@ public final class Camera implements AutoCloseable {
     private void sendBuffersToEncoder() {
         logger.debug("sendBuffersToEncoder()");
 
-        int bufferCount = mmal.mmal_queue_length(picturePool.queue);
+        int bufferCount = mmal_queue_length(picturePool.queue);
         logger.debug("bufferCount={}", bufferCount);
 
         for (int i = 0; i < bufferCount; i++) {
-            MMAL_BUFFER_HEADER_T buffer = mmal.mmal_queue_get(picturePool.queue);
+            MMAL_BUFFER_HEADER_T buffer = mmal_queue_get(picturePool.queue);
             logger.trace("buffer={}", buffer);
 
             if (buffer == null) {
                 throw new RuntimeException(String.format("Failed to get buffer %d from queue", i));
             }
 
-            int result = mmal.mmal_port_send_buffer(encoderOutputPort.getPointer(), buffer.getPointer());
+            int result = mmal_port_send_buffer(encoderOutputPort.getPointer(), buffer.getPointer());
             logger.debug("result={}", result);
 
             if (result != MMAL_SUCCESS) {

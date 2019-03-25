@@ -22,6 +22,7 @@ package uk.co.caprica.picam;
 import com.sun.jna.Pointer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.co.caprica.picam.bindings.LibMmal;
 import uk.co.caprica.picam.bindings.internal.MMAL_COMPONENT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_AWBMODE_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_AWB_GAINS_T;
@@ -46,12 +47,10 @@ import uk.co.caprica.picam.enums.StereoscopicMode;
 
 import java.awt.geom.Rectangle2D;
 
-import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_boolean;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_int32;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_rational;
 import static uk.co.caprica.picam.MmalParameterUtils.mmal_port_parameter_set_uint32;
-import static uk.co.caprica.picam.bindings.LibMmal.mmal;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_BRIGHTNESS;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_CONTRAST;
 import static uk.co.caprica.picam.bindings.MmalParameters.MMAL_PARAMETER_EXPOSURE_COMP;
@@ -85,7 +84,7 @@ class CameraParameterUtils {
         }
         param.write();
 
-        checkResult("Stereoscopic Mode", mmal.mmal_port_parameter_set(getCameraCapturePort(camera), param.hdr));
+        checkResult("Stereoscopic Mode", LibMmal.mmal_port_parameter_set(getCameraCapturePort(camera), param.hdr));
     }
 
     static void setBrightness(MMAL_COMPONENT_T camera, Integer brightness) {
@@ -163,7 +162,7 @@ class CameraParameterUtils {
             MMAL_PARAMETER_EXPOSUREMODE_T param = new MMAL_PARAMETER_EXPOSUREMODE_T();
             param.value = exposureMode.value();
 
-            checkResult("Exposure Mode", mmal_port_parameter_set(camera.control, param));
+            checkResult("Exposure Mode", MmalParameterUtils.mmal_port_parameter_set(camera.control, param));
         }
     }
 
@@ -174,7 +173,7 @@ class CameraParameterUtils {
             MMAL_PARAMETER_EXPOSUREMETERINGMODE_T param = new MMAL_PARAMETER_EXPOSUREMETERINGMODE_T.ByReference();
             param.value = exposureMeteringMode.value();
 
-            checkResult("Exposure Metering Mode", mmal_port_parameter_set(camera.control, param));
+            checkResult("Exposure Metering Mode", MmalParameterUtils.mmal_port_parameter_set(camera.control, param));
         }
     }
 
@@ -195,7 +194,7 @@ class CameraParameterUtils {
             MMAL_PARAMETER_DRC_T param = new MMAL_PARAMETER_DRC_T();
             param.strength = dynamicRangeCompressionStrength.value();
 
-            checkResult("Dynamic Range Compression Strength", mmal_port_parameter_set(camera.control, param));
+            checkResult("Dynamic Range Compression Strength", MmalParameterUtils.mmal_port_parameter_set(camera.control, param));
         }
     }
 
@@ -206,7 +205,7 @@ class CameraParameterUtils {
             MMAL_PARAMETER_AWBMODE_T param = new MMAL_PARAMETER_AWBMODE_T();
             param.value = automaticWhiteBalanceMode.value();
 
-            checkResult("Automatic White Balance Mode", mmal_port_parameter_set(camera.control, param));
+            checkResult("Automatic White Balance Mode", MmalParameterUtils.mmal_port_parameter_set(camera.control, param));
         }
     }
 
@@ -226,7 +225,7 @@ class CameraParameterUtils {
                 param.b_gain.den = 65536;
             }
 
-            checkResult("Automatic White Balance Gains", mmal_port_parameter_set(camera.control, param));
+            checkResult("Automatic White Balance Gains", MmalParameterUtils.mmal_port_parameter_set(camera.control, param));
         }
     }
 
@@ -237,7 +236,7 @@ class CameraParameterUtils {
             MMAL_PARAMETER_IMAGEFX_T param = new MMAL_PARAMETER_IMAGEFX_T();
             param.value = imageEffect.value();
 
-            checkResult("Image Effect", mmal_port_parameter_set(camera.control, param));
+            checkResult("Image Effect", MmalParameterUtils.mmal_port_parameter_set(camera.control, param));
         }
     }
 
@@ -248,7 +247,7 @@ class CameraParameterUtils {
             MMAL_PARAMETER_MIRROR_T param = new MMAL_PARAMETER_MIRROR_T();
             param.value = mirror.value();
 
-            checkResult("Mirror", mmal_port_parameter_set(getCameraCapturePort(camera), param));
+            checkResult("Mirror", MmalParameterUtils.mmal_port_parameter_set(getCameraCapturePort(camera), param));
         }
     }
 
@@ -272,7 +271,7 @@ class CameraParameterUtils {
         param.rect.width = (int)(65536 * width);
         param.rect.height = (int)(65536 * height);
 
-        checkResult("Crop", mmal_port_parameter_set(camera.control, param));
+        checkResult("Crop", MmalParameterUtils.mmal_port_parameter_set(camera.control, param));
     }
 
     static void setCrop(MMAL_COMPONENT_T camera, Rectangle2D.Float crop) {
@@ -290,7 +289,7 @@ class CameraParameterUtils {
             param.u = u;
             param.v = v;
 
-            checkResult("Colour Effect", mmal.mmal_port_parameter_set(camera.control, param.hdr));
+            checkResult("Colour Effect", LibMmal.mmal_port_parameter_set(camera.control, param.hdr));
         }
     }
 
@@ -303,7 +302,7 @@ class CameraParameterUtils {
         param.fps_high.num = highNum;
         param.fps_high.den = highDen;
 
-        checkResult("FPS Range", mmal.mmal_port_parameter_set(getCameraCapturePort(camera), param.hdr));
+        checkResult("FPS Range", LibMmal.mmal_port_parameter_set(getCameraCapturePort(camera), param.hdr));
     }
 
     private static void checkRange(String name, Integer min, Integer max, Integer value) {

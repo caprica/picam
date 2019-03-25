@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_BH_CB_T;
 
-import static uk.co.caprica.picam.bindings.LibMmal.mmal;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_buffer_header_release;
 
 final class CameraControlCallback implements MMAL_PORT_BH_CB_T {
 
@@ -42,6 +42,6 @@ final class CameraControlCallback implements MMAL_PORT_BH_CB_T {
 
         // Currently unused...
 
-        mmal.mmal_buffer_header_release(buffer);
+        mmal_buffer_header_release(buffer);
     }
 }

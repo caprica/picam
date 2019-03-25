@@ -26,8 +26,14 @@ import org.slf4j.LoggerFactory;
 import uk.co.caprica.picam.bindings.internal.MMAL_COMPONENT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 
-import static uk.co.caprica.picam.bindings.LibMmal.mmal;
-import static uk.co.caprica.picam.bindings.LibMmalUtil.mmalUtil;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_component_create;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_component_destroy;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_component_disable;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_component_enable;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_port_disable;
+import static uk.co.caprica.picam.bindings.LibMmalUtil.mmal_connection_create;
+import static uk.co.caprica.picam.bindings.LibMmalUtil.mmal_connection_destroy;
+import static uk.co.caprica.picam.bindings.LibMmalUtil.mmal_connection_enable;
 import static uk.co.caprica.picam.bindings.MmalConnectionFlag.MMAL_CONNECTION_FLAG_ALLOCATION_ON_INPUT;
 import static uk.co.caprica.picam.bindings.MmalConnectionFlag.MMAL_CONNECTION_FLAG_TUNNELLING;
 import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
@@ -43,7 +49,7 @@ final class MmalUtils {
         logger.debug("createComponent(name={})", name);
 
         PointerByReference componentRef = new PointerByReference();
-        int result = mmal.mmal_component_create(name, componentRef);
+        int result = mmal_component_create(name, componentRef);
         logger.debug("result={}", result);
 
         if (result != MMAL_SUCCESS) {
@@ -64,7 +70,7 @@ final class MmalUtils {
 
         logger.debug("component.name={}", component.name);
 
-        int result = mmal.mmal_component_enable(component);
+        int result = mmal_component_enable(component);
         logger.debug("result={}", result);
 
         if (result != MMAL_SUCCESS) {
@@ -77,7 +83,7 @@ final class MmalUtils {
 
         if (component != null) {
             logger.debug("component.name={}", component.name);
-            int result = mmal.mmal_component_disable(component);
+            int result = mmal_component_disable(component);
             logger.debug("result={}", result);
         }
     }
@@ -87,7 +93,7 @@ final class MmalUtils {
 
         if (component != null) {
             logger.debug("component.name={}", component.name);
-            int result = mmal.mmal_component_destroy(component);
+            int result = mmal_component_destroy(component);
             logger.debug("result={}", result);
         }
     }
@@ -102,17 +108,17 @@ final class MmalUtils {
     static int connectPorts(MMAL_PORT_T output_port, MMAL_PORT_T input_port, PointerByReference connection) {
         logger.debug("connectPorts()");
 
-        int result =  mmalUtil.mmal_connection_create(connection, output_port, input_port, MMAL_CONNECTION_FLAG_TUNNELLING | MMAL_CONNECTION_FLAG_ALLOCATION_ON_INPUT);
+        int result =  mmal_connection_create(connection, output_port, input_port, MMAL_CONNECTION_FLAG_TUNNELLING | MMAL_CONNECTION_FLAG_ALLOCATION_ON_INPUT);
         logger.debug("result={}", result);
 
         logger.trace("connection={}", connection);
 
         if (result == MMAL_SUCCESS) {
-            result =  mmalUtil.mmal_connection_enable(connection.getValue());
+            result =  mmal_connection_enable(connection.getValue());
             logger.debug("result={}", result);
 
             if (result != MMAL_SUCCESS) {
-                mmalUtil.mmal_connection_destroy(connection.getValue()); // FIXME is this really necessary, normal clean-up should destroy the connection?
+                mmal_connection_destroy(connection.getValue()); // FIXME is this really necessary, normal clean-up should destroy the connection?
             }
         }
         return result;
@@ -127,7 +133,7 @@ final class MmalUtils {
             boolean enabled = port.isEnabled();
             logger.debug("enabled={}", enabled);
             if (enabled) {
-                result = mmal.mmal_port_disable(port);
+                result = mmal_port_disable(port);
             }
         }
         logger.debug("result={}", result);
@@ -139,7 +145,7 @@ final class MmalUtils {
         logger.debug("destroyConnection()");
 
         if (connection != null) {
-            int result = mmalUtil.mmal_connection_destroy(connection);
+            int result = mmal_connection_destroy(connection);
             logger.debug("result={}", result);
         }
     }

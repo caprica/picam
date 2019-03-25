@@ -30,7 +30,11 @@ import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import static uk.co.caprica.picam.bindings.LibMmal.mmal;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_buffer_header_mem_lock;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_buffer_header_mem_unlock;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_buffer_header_release;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_port_send_buffer;
+import static uk.co.caprica.picam.bindings.LibMmal.mmal_queue_get;
 import static uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_FLAG.MMAL_BUFFER_HEADER_FLAG_FRAME_END;
 import static uk.co.caprica.picam.bindings.internal.MMAL_BUFFER_HEADER_FLAG.MMAL_BUFFER_HEADER_FLAG_TRANSMISSION_FAILED;
 import static uk.co.caprica.picam.bindings.internal.MMAL_STATUS_T.MMAL_SUCCESS;
@@ -74,7 +78,7 @@ class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
         boolean finished = false;
 
         // Lock the native buffer before accessing any of its contents
-        mmal.mmal_buffer_header_mem_lock(pBuffer);
+        mmal_buffer_header_mem_lock(pBuffer);
 
         try {
             MMAL_BUFFER_HEADER_T buffer = new MMAL_BUFFER_HEADER_T(pBuffer);
@@ -101,10 +105,10 @@ class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
         }
         finally {
             // Whatever happened, unlock the native buffer
-            mmal.mmal_buffer_header_mem_unlock(pBuffer);
+            mmal_buffer_header_mem_unlock(pBuffer);
         }
 
-        mmal.mmal_buffer_header_release(pBuffer);
+        mmal_buffer_header_release(pBuffer);
 
         MMAL_PORT_T port = new MMAL_PORT_T(pPort);
         port.read();
@@ -124,14 +128,14 @@ class EncoderBufferCallback implements MMAL_PORT_BH_CB_T {
     private void sendNextPictureBuffer(MMAL_PORT_T port) {
         logger.debug("sendNextPictureBuffer()");
 
-        MMAL_BUFFER_HEADER_T nextBuffer = mmal.mmal_queue_get(picturePool.queue);
+        MMAL_BUFFER_HEADER_T nextBuffer = mmal_queue_get(picturePool.queue);
         logger.trace("nextBuffer={}", nextBuffer);
 
         if (nextBuffer == null) {
             throw new RuntimeException("Failed to get next buffer from picture pool");
         }
 
-        int result = mmal.mmal_port_send_buffer(port.getPointer(), nextBuffer.getPointer());
+        int result = mmal_port_send_buffer(port.getPointer(), nextBuffer.getPointer());
         logger.debug("result={}", result);
 
         if (result != MMAL_SUCCESS) {

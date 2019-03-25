@@ -30,42 +30,42 @@ import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_HEADER_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_BH_CB_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 
-public interface LibMmal extends Library {
+public final class LibMmal {
 
-    String LIBRARY_NAME = "mmal";
+    static {
+        Native.register("mmal");
+    }
 
-    LibMmal mmal = Native.load(LIBRARY_NAME, LibMmal.class);
+    public static native int mmal_component_create(String name, PointerByReference component);
 
-    int mmal_component_create(String name, PointerByReference component);
+    public static native int mmal_component_destroy(MMAL_COMPONENT_T component);
 
-    int mmal_component_destroy(MMAL_COMPONENT_T component);
+    public static native int mmal_component_enable(MMAL_COMPONENT_T component);
 
-    int mmal_component_enable(MMAL_COMPONENT_T component);
+    public static native int mmal_component_disable(MMAL_COMPONENT_T component);
 
-    int mmal_component_disable(MMAL_COMPONENT_T component);
+    public static native int mmal_port_parameter_set(MMAL_PORT_T port, MMAL_PARAMETER_HEADER_T param);
 
-    int mmal_port_parameter_set(MMAL_PORT_T port, MMAL_PARAMETER_HEADER_T param);
+    public static native void mmal_format_copy(MMAL_ES_FORMAT_T format_dest, MMAL_ES_FORMAT_T format_src);
 
-    void mmal_format_copy(MMAL_ES_FORMAT_T format_dest, MMAL_ES_FORMAT_T format_src);
+    public static native int mmal_format_full_copy(MMAL_ES_FORMAT_T format_dest, MMAL_ES_FORMAT_T format_src);
 
-    int mmal_format_full_copy(MMAL_ES_FORMAT_T format_dest, MMAL_ES_FORMAT_T format_src);
+    public static native int mmal_port_format_commit(MMAL_PORT_T port);
 
-    int mmal_port_format_commit(MMAL_PORT_T port);
+    public static native int mmal_port_enable(MMAL_PORT_T port, MMAL_PORT_BH_CB_T cb);
 
-    int mmal_port_enable(MMAL_PORT_T port, MMAL_PORT_BH_CB_T cb);
+    public static native int mmal_port_disable(MMAL_PORT_T port);
 
-    int mmal_port_disable(MMAL_PORT_T port);
+    public static native int mmal_queue_length(PointerByReference queue);
 
-    int mmal_queue_length(PointerByReference queue);
+    public static native MMAL_BUFFER_HEADER_T mmal_queue_get(PointerByReference queue);
 
-    MMAL_BUFFER_HEADER_T mmal_queue_get(PointerByReference queue);
+    public static native int mmal_port_send_buffer(Pointer port, Pointer buffer);
 
-    int mmal_port_send_buffer(Pointer port, Pointer buffer);
+    public static native int mmal_buffer_header_mem_lock(Pointer header);
 
-    int mmal_buffer_header_mem_lock(Pointer header);
+    public static native void mmal_buffer_header_mem_unlock(Pointer header);
 
-    void mmal_buffer_header_mem_unlock(Pointer header);
-
-    void mmal_buffer_header_release(Pointer header);
+    public static native void mmal_buffer_header_release(Pointer header);
 
 }

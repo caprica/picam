@@ -21,6 +21,7 @@ package uk.co.caprica.picam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.co.caprica.picam.bindings.LibMmal;
 import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_BOOLEAN_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_INT32_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_PARAMETER_RATIONAL_T;
@@ -29,7 +30,7 @@ import uk.co.caprica.picam.bindings.internal.MMAL_PORT_T;
 import uk.co.caprica.picam.bindings.internal.MMAL_RATIONAL_T;
 import uk.co.caprica.picam.bindings.internal.ParameterStructure;
 
-import static uk.co.caprica.picam.bindings.LibMmal.mmal;
+// FIXME are these param.writes REALLY needed?
 
 /**
  *
@@ -52,7 +53,7 @@ final class MmalParameterUtils {
 
         logger.trace("param={}", param);
 
-        return mmal.mmal_port_parameter_set(port, param.hdr);
+        return LibMmal.mmal_port_parameter_set(port, param.hdr);
     }
 
     static int mmal_port_parameter_set_uint32(MMAL_PORT_T port, int id, int value) {
@@ -66,7 +67,7 @@ final class MmalParameterUtils {
 
         logger.trace("param={}", param);
 
-        return mmal.mmal_port_parameter_set(port, param.hdr);
+        return LibMmal.mmal_port_parameter_set(port, param.hdr);
     }
 
     static int mmal_port_parameter_set_boolean(MMAL_PORT_T port, int id, int enable) {
@@ -80,7 +81,7 @@ final class MmalParameterUtils {
 
         logger.trace("param={}", param);
 
-        return mmal.mmal_port_parameter_set(port, param.hdr);
+        return LibMmal.mmal_port_parameter_set(port, param.hdr);
     }
 
     static int mmal_port_parameter_set_rational(MMAL_PORT_T port, int id, MMAL_RATIONAL_T value) {
@@ -94,7 +95,7 @@ final class MmalParameterUtils {
 
         logger.trace("param={}", param);
 
-        return mmal.mmal_port_parameter_set(port, param.hdr);
+        return LibMmal.mmal_port_parameter_set(port, param.hdr);
     }
 
     static int mmal_port_parameter_set(MMAL_PORT_T port, ParameterStructure param) {
@@ -104,6 +105,6 @@ final class MmalParameterUtils {
 
         logger.trace("param={}", param);
 
-        return mmal.mmal_port_parameter_set(port, param.hdr);
+        return LibMmal.mmal_port_parameter_set(port, param.hdr);
     }
 }
