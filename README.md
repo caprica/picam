@@ -62,7 +62,7 @@ The first thing to do is to load the picam JNI native library, this is loaded as
 to do so is this:
 
 ```
-    System.load("/home/pi/whatever-path-you-want/picam.so");
+System.load("/home/pi/whatever-path-you-want/picam.so");
 ```
 
 You could get this path from the current directory, a configuration file, a system property or whatever you want.
