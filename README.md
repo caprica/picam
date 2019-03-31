@@ -81,7 +81,9 @@ You can supply as much or as little configuration as you want, sensible defaults
 Next, create a `Camera` with that configuration:
 ```
 try (Camera camera = new Camera(config)) {
-    camera.takePicture(new FilePictureCaptureHandler(new File("picam.jpg")));
+    camera.open();
+    camera.takePicture(new FilePictureCaptureHandler(new File("picam1.jpg")));
+    camera.takePicture(new FilePictureCaptureHandler(new File("picam2.jpg")));
 }
 ```
 Captured images can be directly saved to disk, or returned and processed as a `byte[]`.
@@ -102,6 +104,7 @@ You can specify the delay like this:
 
 ```
 try (Camera camera = new Camera(config)) {
+    camera.open();
     camera.takePicture(new FilePictureCaptureHandler(new File("picam-1.jpg")), 3000);
     camera.takePicture(new FilePictureCaptureHandler(new File("picam-2.jpg")));
 }
