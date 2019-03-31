@@ -4,8 +4,8 @@ picam you should switch to the [picam-1.x branch](https://github.com/caprica/pic
 **At the moment this master branch for 2.0.0 is somewhat experimental in that it uses JNI rather than JNA to access the
 camera and there is a little bit more involved in getting up and running.**
 
-*If you want to play it safe, use the [picam-1.x branch](https://github.com/caprica/picam/tree/picam-1.x) branch, if you
-want to experiment, test, or help improve the JNI solution then by all means this master branch is for you!*
+*If you want to play it safe, use the [picam-1.x branch](https://github.com/caprica/picam/tree/picam-1.x) instead, if
+you want to experiment, test, or help improve the JNI solution then by all means this master branch is for you!*
 
 picam
 =====
@@ -35,6 +35,9 @@ Release are available at [Maven Cental](https://search.maven.org/search?q=a:pica
 Installation
 ------------
 
+*Currently there is no 2.0.0 release available as it is still undergoing development and testing, you will have to build
+the project yourself for the time being.*
+
 Add the following Maven dependency to your project:
 
     <dependencies>
@@ -60,7 +63,6 @@ to do so is this:
 
 ```
     System.load("/home/pi/whatever-path-you-want/picam.so");
-
 ```
 
 You could get this path from the current directory, a configuration file, a system property or whatever you want.
@@ -113,14 +115,16 @@ the same time.
 Tutorials
 ---------
 
+*Tutorials are currently for picam-1.x, new tutorials will be provided when picam-2.0.0 is released.*
+
 Some new tutorials are available [here](http://capricasoftware.co.uk/projects/picam/tutorials).
 
 Status
 ------
 
-The current API should be considered alpha, it is stable but nevertheless is still subject to change.
+The current API is stable but nevertheless is still subject to change.
 
-Thousands upon thousands of images have been captured with no problems.
+Hundres of thousands of images have been captured, but you might like to have a look at [this issue](https://github.com/caprica/picam/issues/9).
 
 Feedback is welcome at the [github project](https://github.com/caprica/picam).
 
