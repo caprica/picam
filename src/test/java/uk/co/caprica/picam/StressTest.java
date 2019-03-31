@@ -24,6 +24,9 @@ import uk.co.caprica.picam.enums.Encoding;
 import uk.co.caprica.picam.enums.ExposureMeteringMode;
 import uk.co.caprica.picam.enums.ExposureMode;
 
+import java.sql.Time;
+import java.util.Date;
+
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 
 /**
@@ -33,6 +36,8 @@ import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 public class StressTest {
 
     public static void main(String[] args) throws InterruptedException {
+        System.load("/home/pi/workspaces/picam-test/picam-native/picam.so");
+
         Camera camera = new Camera(
             cameraConfiguration()
                 .width(1920)
@@ -42,27 +47,59 @@ public class StressTest {
                 .exposureMeteringMode(ExposureMeteringMode.MATRIX)
                 .encoding(Encoding.JPEG)
                 .quality(85)
+                .captureTimeout(10000)
         );
+
+        camera.open();
 
         int count = 0;
 
+        System.out.printf("STARTED AT %s%n", new Date());
+
+        long started = System.currentTimeMillis();
+
         while (true) {
-            PictureCaptureHandler<?> captureHandler = new ByteArrayPictureCaptureHandler();
             try {
+                PictureCaptureHandler<?> captureHandler = new ByteArrayPictureCaptureHandler(40000);
                 camera.takePicture(captureHandler);
                 count++;
                 if (count % 50 == 0) {
-                    System.err.println(count);
+                    long now = System.currentTimeMillis();
+
+                    int seconds = (int)((now - started) / 1000);
+                    float rate = (float) count / (float) seconds;
+
+                    System.err.printf("%-14s: total %6d, %01.1f/s%n", formatTime(now-started), count, rate);
                 }
             }
             catch (CaptureFailedException e) {
+                camera.close();
+                System.out.println("Capture failed: " + e.getMessage());
+                boolean reopen = camera.open();
+                if (!reopen) {
+                    System.out.println("Failed to reopen camera");
+                    break;
+                }
+                System.out.println("Camera successfully reopened");
+            }
+            catch (Exception e) {
                 e.printStackTrace();
                 break;
             }
         }
 
         // Join here so we could e.g. attach a profiler after the failure
-        Thread.currentThread().join();
+//        Thread.currentThread().join();
+    }
+
+    private static String formatTime(long value) {
+        value /= 1000;
+        int hours = (int) value / 3600;
+        int remainder = (int) value - hours * 3600;
+        int minutes = remainder / 60;
+        remainder = remainder - minutes * 60;
+        int seconds = remainder;
+        return String.format("%d:%02d:%02d", hours, minutes, seconds);
     }
 
 }

@@ -23,9 +23,10 @@ public interface PictureCaptureHandler<T> {
 
     void begin() throws Exception;
 
-    void pictureData(byte[] data) throws Exception;
+    int pictureData(byte[] data) throws Exception;
 
     void end() throws Exception;
 
     T result();
+
 }

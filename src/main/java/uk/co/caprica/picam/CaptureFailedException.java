@@ -24,6 +24,9 @@ package uk.co.caprica.picam;
  */
 public final class CaptureFailedException extends Exception {
 
+    public CaptureFailedException() {
+    }
+
     public CaptureFailedException(Throwable cause) {
         super(cause);
     }

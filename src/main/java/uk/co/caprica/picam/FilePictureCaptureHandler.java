@@ -19,16 +19,11 @@
 
 package uk.co.caprica.picam;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
 public class FilePictureCaptureHandler implements PictureCaptureHandler<File> {
-
-    private final Logger logger = LoggerFactory.getLogger(FilePictureCaptureHandler.class);
 
     private final File file;
 
@@ -38,21 +33,23 @@ public class FilePictureCaptureHandler implements PictureCaptureHandler<File> {
         this.file = file;
     }
 
+    public FilePictureCaptureHandler(String file) {
+        this(new File(file));
+    }
+
     @Override
     public void begin() throws Exception {
-        logger.debug("begin()");
         out = new BufferedOutputStream(new FileOutputStream(file));
     }
 
     @Override
-    public void pictureData(byte[] data) throws Exception {
-        logger.debug("pictureData(data=[{}])", data.length);
+    public int pictureData(byte[] data) throws Exception {
         out.write(data);
+        return data.length;
     }
 
     @Override
     public void end() throws Exception {
-        logger.debug("end()");
         if (out != null) {
             out.flush();
             out.close();
@@ -64,4 +61,5 @@ public class FilePictureCaptureHandler implements PictureCaptureHandler<File> {
     public File result() {
         return file;
     }
+
 }

@@ -19,8 +19,6 @@
 
 package uk.co.caprica.picam;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.co.caprica.picam.enums.Encoding;
 
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
@@ -36,15 +34,13 @@ import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
  */
 public class BasicTest {
 
-    private final Logger logger = LoggerFactory.getLogger(BasicTest.class);
-
     public static void main(String[] args) throws Exception {
+        System.load("/home/pi/workspaces/picam-test/picam-native/picam.so");
+
         new BasicTest(args);
     }
 
     private BasicTest(String[] args) throws Exception {
-        logger.info("BasicTest()");
-
         if (args.length !=3) {
             System.err.println("Usage: <width> <height> <count>");
             System.exit(1);
@@ -58,9 +54,9 @@ public class BasicTest {
         CameraConfiguration config = cameraConfiguration()
             .width(width)
             .height(height)
-            .delay(5)
             .encoding(Encoding.JPEG)
             .quality(85)
+            .captureTimeout(10000)
 //            .brightness(50)
 //            .contrast(-30)
 //            .saturation(80)
@@ -83,15 +79,12 @@ public class BasicTest {
         PictureCaptureHandler pictureCaptureHandler = new SequentialFilePictureCaptureHandler("image-%04d.jpg");
 
         try (Camera camera = new Camera(config)) {
-            logger.info("created camera " + camera);
-
             for (int i = 0; i < max; i++) {
                 System.out.println("Begin " + i);
                 camera.takePicture(pictureCaptureHandler);
                 System.out.println("  End " + i);
             }
         }
-
-        logger.info("finished");
     }
+
 }

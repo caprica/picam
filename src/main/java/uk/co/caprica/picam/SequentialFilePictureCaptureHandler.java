@@ -19,9 +19,6 @@
 
 package uk.co.caprica.picam;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,10 +29,8 @@ import java.io.FileOutputStream;
  */
 public class SequentialFilePictureCaptureHandler implements PictureCaptureHandler<File> {
 
-    // Buffer size, somewhat arbitrary (default is 8k)
+    // Buffer size, somewhat arbitrary (default is 32k)
     private static final int BUFFER_SIZE = 1024 * 32;
-
-    private final Logger logger = LoggerFactory.getLogger(SequentialFilePictureCaptureHandler.class);
 
     private final String pattern;
 
@@ -56,21 +51,18 @@ public class SequentialFilePictureCaptureHandler implements PictureCaptureHandle
 
     @Override
     public void begin() throws Exception {
-        logger.debug("begin()");
         file = new File(String.format(pattern, number++));
-        logger.trace("file={}", file.getAbsolutePath());
         out = new BufferedOutputStream(new FileOutputStream(file), BUFFER_SIZE);
     }
 
     @Override
-    public void pictureData(byte[] data) throws Exception {
-        logger.debug("pictureData(data=[{}])", data.length);
+    public int pictureData(byte[] data) throws Exception {
         out.write(data);
+        return data.length;
     }
 
     @Override
     public void end() throws Exception {
-        logger.debug("end()");
         if (out != null) {
             out.flush();
             out.close();
@@ -82,4 +74,5 @@ public class SequentialFilePictureCaptureHandler implements PictureCaptureHandle
     public File result() {
         return file;
     }
+
 }

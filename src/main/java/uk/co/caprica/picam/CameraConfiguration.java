@@ -38,7 +38,9 @@ public final class CameraConfiguration {
 
     private static final Integer DEFAULT_HEIGHT = 1944;
 
-    private static final Integer DEFAULT_DELAY = 5;
+    private Integer cameraNumber = 0;
+
+    private Integer customSensorConfig = 0;
 
     private Integer width = DEFAULT_WIDTH;
 
@@ -88,9 +90,13 @@ public final class CameraConfiguration {
 
     private Integer rotation;
 
-    private Rectangle2D.Float crop = new Rectangle2D.Float(0.f, 0.f, 1.f, 1.f);
+    private Double cropX;
 
-    private Integer delay = DEFAULT_DELAY;
+    private Double cropY;
+
+    private Double cropW;
+
+    private Double cropH;
 
     private Boolean colourEffect;
 
@@ -98,9 +104,7 @@ public final class CameraConfiguration {
 
     private Integer v;
 
-    private Integer captureTimeout = -1;
-
-    //    private Integer imageEffectsParameters;
+    private Integer captureTimeout = 0;
 
     private CameraConfiguration() {
     }
@@ -263,13 +267,11 @@ public final class CameraConfiguration {
         return this;
     }
 
-    public CameraConfiguration crop(float x, float y, float width, float height) {
-        this.crop.setRect(x, y, width, height);
-        return this;
-    }
-
-    public CameraConfiguration delay(Integer delay) {
-        this.delay = delay;
+    public CameraConfiguration crop(double x, double y, double width, double height) {
+        this.cropX = x;
+        this.cropY = y;
+        this.cropW = width;
+        this.cropH = height;
         return this;
     }
 
@@ -280,6 +282,14 @@ public final class CameraConfiguration {
 
     public Camera camera() {
         return new Camera(this);
+    }
+
+    public Integer cameraNumber() {
+        return cameraNumber;
+    }
+
+    public Integer customSensorConfig() {
+        return customSensorConfig;
     }
 
     public Integer width() {
@@ -390,12 +400,20 @@ public final class CameraConfiguration {
         return rotation;
     }
 
-    public Rectangle2D.Float crop() {
-        return crop;
+    public Double cropX() {
+        return cropX;
     }
 
-    public Integer delay() {
-        return delay;
+    public Double cropY() {
+        return cropY;
+    }
+
+    public Double cropW() {
+        return cropW;
+    }
+
+    public Double cropH() {
+        return cropH;
     }
 
     public Integer captureTimeout() {

@@ -41,8 +41,9 @@ public class ByteArrayPictureCaptureHandler implements PictureCaptureHandler<byt
     }
 
     @Override
-    public void pictureData(byte[] data) throws Exception {
+    public int pictureData(byte[] data) throws Exception {
         out.write(data);
+        return data.length;
     }
 
     @Override
