@@ -32,6 +32,20 @@ import java.util.Collections;
 
 /**
  * Helper class to extract the bundled native library file and install it to a local directory.
+ * <p>
+ * You can use this class to install the native library to the system temporary directory (the native library will be
+ * automatically deleted when your application exits) or to any other directory you may like to specify.
+ * <p>
+ * When installing to a specific directory, you have the option to keep or overwrite the existing file.
+ * <p>
+ * For example, the simplest case:
+ * <pre>
+ * PicamNativeLibrary.installTempLibrary();
+ * </pre>
+ * Installing to a specific directory:
+ * <pre>
+ * PicamNativeLibrary.installLibrary("/home/pi");
+ * </pre>
  */
 public final class PicamNativeLibrary {
 
@@ -78,6 +92,44 @@ public final class PicamNativeLibrary {
      * @return full path of the installed native library file
      * @throws NativeLibraryException if the native library could not be installed or loaded
      */
+    public static Path installLibrary(String installDirectory) throws NativeLibraryException {
+        return installLibrary(Paths.get(installDirectory));
+    }
+
+    /**
+     * Install the native library to a specific directory, optionally overwriting it if it already exists.
+     * <p>
+     * The native library, if it exists, will be replaced or not according to the overwrite parameter.
+     * <p>
+     * On successful installation, the native library will be loaded.
+     * <p>
+     * The classpath will be searched for the native library to install, the library is expected to exist in a "/native"
+     * directory off the classpath. The native library must be the only file in that directory with a name that has a
+     * ".so" suffix.
+     * <p>
+     * This will work for either a file-based classpath or a jar classpath.
+     *
+     * @param installDirectory full path to the directory where the native library is to be installed
+     * @param overwrite <code>true</code> if any existing native library should be replaced; otherwise <code>false</code>
+     * @return full path of the installed native library file
+     * @throws NativeLibraryException if the native library could not be installed or loaded
+     */
+    public static Path installLibrary(String installDirectory, boolean overwrite) throws NativeLibraryException {
+        return installLibrary(Paths.get(installDirectory), overwrite);
+    }
+
+    /**
+     * Install the native library to a specific directory.
+     * <p>
+     * The native library will <strong>not</strong> be replaced if it already exists in the specified directory (only
+     * filenames are compared).
+     * <p>
+     * On successful installation, the native library will be loaded.
+     *
+     * @param installDirectory full path to the directory where the native library is to be installed
+     * @return full path of the installed native library file
+     * @throws NativeLibraryException if the native library could not be installed or loaded
+     */
     public static Path installLibrary(Path installDirectory) throws NativeLibraryException {
         return installLibrary(installDirectory, false);
     }
@@ -95,21 +147,21 @@ public final class PicamNativeLibrary {
      * <p>
      * This will work for either a file-based classpath or a jar classpath.
      *
-     * @param installPath full path to the directory where the native library is to be installed
+     * @param installDirectory full path to the directory where the native library is to be installed
      * @param overwrite <code>true</code> if any existing native library should be replaced; otherwise <code>false</code>
      * @return full path of the installed native library file
      * @throws NativeLibraryException if the native library could not be installed or loaded
      */
-    private static Path installLibrary(Path installPath, boolean overwrite) throws NativeLibraryException {
+    public static Path installLibrary(Path installDirectory, boolean overwrite) throws NativeLibraryException {
         if (!installed) {
             try {
                 URL containerUrl = PicamNativeLibrary.class.getResource(SOURCE_PREFIX);
                 String protocol = containerUrl.getProtocol();
                 if ("file".equalsIgnoreCase(protocol)) {
-                    return installLibraryFromPath(Paths.get(containerUrl.toURI()), installPath, overwrite);
+                    return installLibraryFromPath(Paths.get(containerUrl.toURI()), installDirectory, overwrite);
                 } else if ("jar".equalsIgnoreCase(protocol)) {
                     try (FileSystem fs = FileSystems.newFileSystem(containerUrl.toURI(), Collections.<String, Object>emptyMap())) {
-                        return installLibraryFromPath(fs.getPath(SOURCE_PREFIX), installPath, overwrite);
+                        return installLibraryFromPath(fs.getPath(SOURCE_PREFIX), installDirectory, overwrite);
                     }
                 } else {
                     throw new NativeLibraryException(String.format("Unexpected scheme '%s'", protocol));

@@ -28,10 +28,6 @@ public final class NativeLibraryException extends Exception {
         super(message);
     }
 
-    public NativeLibraryException(Throwable cause) {
-        super(cause);
-    }
-
     public NativeLibraryException(String message, Throwable cause) {
         super(message, cause);
     }
