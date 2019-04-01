@@ -74,7 +74,7 @@ CameraConfiguration config = cameraConfiguration()
     .width(1920)
     .height(1080)
     .encoding(Encoding.JPEG)
-    .quality(85)
+    .quality(85);
 ```
 You can supply as much or as little configuration as you want, sensible defaults will be provided where needed.
 
