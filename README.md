@@ -47,7 +47,7 @@ Add the following Maven dependency to your project:
 
 No other dependencies are necessary.
 
-Since version 2+ of picam uses JNI directly via the [picam native library](https://github.com/caprica/picam-native)
+Since version 2+ of picam, JNI is used directly via the [picam native library](https://github.com/caprica/picam-native)
 project.
  
 You can build this library yourself, or use the pre-built shared library that is bundled in the picam jar file. 
@@ -59,7 +59,7 @@ The first thing to do is to install the picam JNI native library, you can set th
 simplest way is to have picam do it for you:
 
 ```
-import static uk.co.caprica.picam.library.PicamNativeLibrary.installTempLibrary;
+import static uk.co.caprica.picam.PicamNativeLibrary.installTempLibrary;
 
 public class PicamTest {
 

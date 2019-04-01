@@ -23,9 +23,7 @@ import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
 import uk.co.caprica.picam.enums.Encoding;
 import uk.co.caprica.picam.enums.ExposureMeteringMode;
 import uk.co.caprica.picam.enums.ExposureMode;
-import uk.co.caprica.picam.library.PicamNativeLibrary;
 
-import java.sql.Time;
 import java.util.Date;
 
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;

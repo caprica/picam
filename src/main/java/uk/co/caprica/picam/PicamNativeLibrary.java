@@ -17,7 +17,7 @@
  * Copyright 2016-2019 Caprica Software Limited.
  */
 
-package uk.co.caprica.picam.library;
+package uk.co.caprica.picam;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

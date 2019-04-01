@@ -20,7 +20,6 @@
 package uk.co.caprica.picam;
 
 import uk.co.caprica.picam.enums.Encoding;
-import uk.co.caprica.picam.library.PicamNativeLibrary;
 
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 

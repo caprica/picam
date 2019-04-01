@@ -17,7 +17,7 @@
  * Copyright 2016-2019 Caprica Software Limited.
  */
 
-package uk.co.caprica.picam.library;
+package uk.co.caprica.picam;
 
 /**
  * Exception that may be thrown during native library installation.
