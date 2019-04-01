@@ -35,9 +35,6 @@ Release are available at [Maven Cental](https://search.maven.org/search?q=a:pica
 Installation
 ------------
 
-*Currently there is no 2.0.0 release available as it is still undergoing development and testing, you will have to build
-the project yourself for the time being.*
-
 Add the following Maven dependency to your project:
 
     <dependencies>
@@ -50,24 +47,33 @@ Add the following Maven dependency to your project:
 
 No other dependencies are necessary.
 
-Since version 2+ of picam uses JNI directly, you must also install the
-[picam native library](https://github.com/caprica/picam-native).
-
-In the final release of picam 2.x the JNI native library may be bundled with the picam jar file, but for now it is not.
+Since version 2+ of picam uses JNI directly via the [picam native library](https://github.com/caprica/picam-native)
+project.
+ 
+You can build this library yourself, or use the pre-built shared library that is bundled in the picam jar file. 
 
 Basic Usage
 -----------
 
-The first thing to do is to load the picam JNI native library, this is loaded as any other native library, one easy way
-to do so is this:
+The first thing to do is to install the picam JNI native library, you can set this up manually if you want, but the
+simplest way is to have picam do it for you:
 
 ```
-System.load("/home/pi/whatever-path-you-want/picam.so");
+import static uk.co.caprica.picam.library.PicamNativeLibrary.installTempLibrary;
+
+public class PicamTest {
+
+    public static void main(String[] args) {
+        // Extract the bundled picam native library to a temporary file and load it
+        installTempLibrary();
+        
+        // ... your application code ...
+    }
+
+}
 ```
 
-You could get this path from the current directory, a configuration file, a system property or whatever you want.
-
-Using the library is simple, first you create a `CameraConfiguration` using a convenient "builder" approach:
+Using the library itself is simple, first you create a `CameraConfiguration` using a convenient "builder" approach:
 
 ```
 CameraConfiguration config = cameraConfiguration()
