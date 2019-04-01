@@ -122,9 +122,7 @@ the same time.
 Tutorials
 ---------
 
-*Tutorials are currently for picam-1.x, new tutorials will be provided when picam-2.0.0 is released.*
-
-Some new tutorials are available [here](http://capricasoftware.co.uk/projects/picam/tutorials).
+Some new tutorials are available [here](http://capricasoftware.co.uk/projects/picam-2/tutorials).
 
 Status
 ------
