@@ -23,6 +23,7 @@ import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
 import uk.co.caprica.picam.enums.Encoding;
 import uk.co.caprica.picam.enums.ExposureMeteringMode;
 import uk.co.caprica.picam.enums.ExposureMode;
+import uk.co.caprica.picam.library.PicamNativeLibrary;
 
 import java.sql.Time;
 import java.util.Date;
@@ -35,8 +36,8 @@ import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
  */
 public class StressTest {
 
-    public static void main(String[] args) throws InterruptedException {
-        System.load("/home/pi/workspaces/picam-test/picam-native/picam.so");
+    public static void main(String[] args) throws Exception {
+        System.out.println("Installed native library to " + PicamNativeLibrary.installTempLibrary());
 
         Camera camera = new Camera(
             cameraConfiguration()
@@ -49,8 +50,6 @@ public class StressTest {
                 .quality(85)
                 .captureTimeout(10000)
         );
-
-        camera.open();
 
         int count = 0;
 

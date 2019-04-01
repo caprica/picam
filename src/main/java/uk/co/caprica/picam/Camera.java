@@ -21,6 +21,27 @@ package uk.co.caprica.picam;
 
 /**
  * Camera.
+ * <p>
+ * Creating a camera instance will automatically "open" it so that it is ready for taking pictures.
+ * <p>
+ * If an error occurs, or if you no longer need the camera instance, you should {@link #close()} it.
+ * <p>
+ * Using try-with-resources is recommended to make sure the camera instance is closed, for example:
+ * <pre>
+ * try (Camera camera = new Camera(config) {
+ *     camera.takePicture(new FilePictureCaptureHandler("capture.jpg"));
+ * }
+ * </pre>
+ * <p>
+ * A closed camera can be reopened via {@link #open()} if you are attempting to recover from an error, otherwise simply
+ * create a new camera instance.
+ * <p>
+ * While the camera is in use you must make sure to keep references to the camera and any {@link PictureCaptureHandler}
+ * objects that you are using to prevent them from being garbage-collected. If you do not, a fatal crash may occur and
+ * kill your application.
+ * <p>
+ * The underlying camera is a hardware resource and as such is fundamentally <strong>single-threaded</strong>. You must
+ * <strong>not</strong> access the camera from multiple threads concurrently.
  */
 public final class Camera implements AutoCloseable {
 
@@ -38,42 +59,47 @@ public final class Camera implements AutoCloseable {
     private boolean opened;
 
     /**
-     * Create a camera component with default configuration.
+     * Create a camera component with reasonable default configuration.
      * <p>
-     * A camera must be opened before taking pictures.
+     * The camera will automatically be opened.
      * <p>
-     * A camera should be closed when it is no longer needed.
+     * The camera should be closed via {@link #close()} when it is no longer needed.
      *
      * @see #Camera(CameraConfiguration)
-     * @see #open()
      * @see #close()
      */
     public Camera() {
+        this(null);
     }
 
     /**
      * Create a camera component.
      * <p>
-     * A camera must be opened before taking pictures.
+     * The camera will automatically be opened.
      * <p>
-     * A camera should be closed when it is no longer needed.
+     * The camera should be closed via {@link #close()} when it is no longer needed.
      *
-     * @see #open()
      * @see #close()
      *
      * @param cameraConfiguration camera configuration
      */
     public Camera(CameraConfiguration cameraConfiguration) {
         this.cameraConfiguration = cameraConfiguration;
+        open();
     }
 
     /**
      * Open the camera, creating all of the necessary native resources.
+     * <p>
+     * If the camera is already open this method will do nothing.
      *
      * @see #close()
+     * @return <code>true</code> if the camera is open; <code>false</code> if it is not
      */
     public boolean open() {
-        opened = create(cameraConfiguration);
+        if (!opened) {
+            opened = create(cameraConfiguration);
+        }
         return opened;
     }
 
@@ -90,10 +116,10 @@ public final class Camera implements AutoCloseable {
      * @see #open()
      * @see #takePicture(PictureCaptureHandler, int)
      *
-     * @param pictureCaptureHandler
-     * @param <T>
-     * @return
-     * @throws CaptureFailedException
+     * @param pictureCaptureHandler handler that will receive the picture capture data
+     * @param <T> type that will be returned by the picture capture handler
+     * @return picture capture handler result
+     * @throws CaptureFailedException if an error occurs
      */
     public <T> T takePicture(PictureCaptureHandler<T> pictureCaptureHandler) throws CaptureFailedException {
         return takePicture(pictureCaptureHandler ,0);
@@ -111,11 +137,11 @@ public final class Camera implements AutoCloseable {
      *
      * @see #open()
      *
-     * @param pictureCaptureHandler
-     * @param delay
-     * @param <T>
-     * @return
-     * @throws CaptureFailedException
+     * @param pictureCaptureHandler handler that will receive the picture capture data
+     * @param delay delay before taking the picture, specified in milliseconds
+     * @param <T> type that will be returned by the picture capture handler
+     * @return picture capture handler result
+     * @throws CaptureFailedException if an error occurs
      */
     public <T> T takePicture(PictureCaptureHandler<T> pictureCaptureHandler, int delay) throws CaptureFailedException {
         if (!opened) {
@@ -132,14 +158,18 @@ public final class Camera implements AutoCloseable {
     /**
      * Close the camera, freeing up all of the associated native resources.
      * <p>
-     * The camera can be reopened.
+     * The camera can be reopened via {@link #open()}.
+     * <p>
+     * If the camera is already closed this method will do nothing.
      *
      * @see #open()
      */
     @Override
     public void close() {
-        destroy();
-        opened = false;
+        if (opened) {
+            destroy();
+            opened = false;
+        }
     }
 
     /**

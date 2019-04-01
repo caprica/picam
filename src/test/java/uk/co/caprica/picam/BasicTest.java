@@ -20,6 +20,7 @@
 package uk.co.caprica.picam;
 
 import uk.co.caprica.picam.enums.Encoding;
+import uk.co.caprica.picam.library.PicamNativeLibrary;
 
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 
@@ -35,7 +36,7 @@ import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 public class BasicTest {
 
     public static void main(String[] args) throws Exception {
-        System.load("/home/pi/workspaces/picam-test/picam-native/picam.so");
+        System.out.println("Installed native library to " + PicamNativeLibrary.installTempLibrary());
 
         new BasicTest(args);
     }
