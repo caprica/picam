@@ -115,6 +115,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
+                            <mainClass>uk.co.caprica.picam.app.Snap</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
