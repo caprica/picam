@@ -34,7 +34,20 @@ import static uk.co.caprica.picam.PicamNativeLibrary.installTempLibrary;
  */
 public final class Snap {
 
+    private static final String[] ENV_KEYS = {
+        "java.home",
+        "java.version",
+        "java.runtime.name",
+        "java.runtime.version",
+        "java.vm.info",
+        "java.vm.name",
+        "java.vm.version",
+        "os.version"
+    };
+
     public static void main(String[] args) {
+        dumpEnvironment();
+
         try {
             System.out.printf("Temporarily installed picam native library to %s%n", installTempLibrary());
         }
@@ -73,6 +86,14 @@ public final class Snap {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void dumpEnvironment() {
+        System.out.println("Environment:");
+        for (String key : ENV_KEYS) {
+            System.out.printf(" %-20s: %s%n", key, System.getProperty(key));
+        }
+        System.out.println();
     }
 
 }
