@@ -52,6 +52,17 @@ project.
  
 You can build this library yourself, or use the pre-built shared library that is bundled in the picam jar file. 
 
+Testing the Installation
+------------------------
+
+A very basic capture application is provided with the picam jar file. You can test that everything works like this:
+
+```
+java -jar picam-2.0.0.jar 1280 800 test.jpg
+```
+
+The command-line parameters are width, height and filename respectively.
+
 Basic Usage
 -----------
 
