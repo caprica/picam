@@ -32,6 +32,11 @@ import java.awt.geom.Rectangle2D;
 
 import static uk.co.caprica.picam.enums.Encoding.PNG;
 
+/**
+ * Camera configuration.
+ * <p>
+ * This can be used in like a "builder".
+ */
 public final class CameraConfiguration {
 
     private static final Integer DEFAULT_WIDTH = 2592;

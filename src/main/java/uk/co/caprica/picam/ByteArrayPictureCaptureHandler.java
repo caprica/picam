@@ -21,16 +21,27 @@ package uk.co.caprica.picam;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * Implementation of a picture capture handler that stores the image data in a byte array.
+ */
 public class ByteArrayPictureCaptureHandler implements PictureCaptureHandler<byte[]> {
 
     private final Integer initialSize;
 
     private ByteArrayOutputStream out;
 
+    /**
+     * Create a picture capture handler.
+     */
     public ByteArrayPictureCaptureHandler() {
         this.initialSize = null;
     }
 
+    /**
+     * Create a picture capture handler.
+     *
+     * @param initialSize initial size of the byte buffer, it will be automatically extended as needed
+     */
     public ByteArrayPictureCaptureHandler(int initialSize) {
         this.initialSize = initialSize;
     }

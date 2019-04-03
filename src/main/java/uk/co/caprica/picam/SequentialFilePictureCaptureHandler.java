@@ -40,10 +40,23 @@ public class SequentialFilePictureCaptureHandler implements PictureCaptureHandle
 
     private BufferedOutputStream out;
 
+    /**
+     * Create a picture capture handler.
+     * <p>
+     * File numbering will start from one.
+     *
+     * @param pattern format pattern for the filenames, containing a "%d" formatter somewhere to take the file number
+     */
     public SequentialFilePictureCaptureHandler(String pattern) {
         this(pattern, 1);
     }
 
+    /**
+     * Create a picture capture handler.
+     *
+     * @param pattern format pattern for the filenames, containing a "%d" formatter somewhere to take the file number
+     * @param initial initial file number
+     */
     public SequentialFilePictureCaptureHandler(String pattern, int initial) {
         this.pattern = pattern;
         this.number = initial;

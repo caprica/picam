@@ -19,6 +19,11 @@
 
 package uk.co.caprica.picam;
 
+/**
+ * Implementation of a picture capture handler that does nothing.
+ * <p>
+ * This is used only for testing the camera.
+ */
 public class NopPictureCaptureHandler implements PictureCaptureHandler {
 
     @Override

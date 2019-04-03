@@ -22,17 +22,40 @@ package uk.co.caprica.picam;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Path;
 
+/**
+ * Implementation of a picture capture handler that stores the image data in a local file.
+ */
 public class FilePictureCaptureHandler implements PictureCaptureHandler<File> {
 
     private final File file;
 
     private BufferedOutputStream out;
 
+    /**
+     * Create a picture capture handler.
+     *
+     * @param file file to save the picture to
+     */
+    public FilePictureCaptureHandler(Path file) {
+        this.file = file.toFile();
+    }
+
+    /**
+     * Create a picture capture handler.
+     *
+     * @param file file to save the picture to
+     */
     public FilePictureCaptureHandler(File file) {
         this.file = file;
     }
 
+    /**
+     * Create a picture capture handler.
+     *
+     * @param file name of the file to save the picture to
+     */
     public FilePictureCaptureHandler(String file) {
         this(new File(file));
     }

@@ -181,16 +181,16 @@ public final class Camera implements AutoCloseable {
      * Private native method used to create the native camera component and all associated native resources.
      *
      * @param cameraConfiguration
-     * @return
+     * @return <code>true</code> if the native resources were successfully created; <code>false</code> on error
      */
     private native boolean create(CameraConfiguration cameraConfiguration);
 
     /**
      * Private native method used to trigger a capture.
      *
-     * @param handler
-     * @param delay
-     * @throws CaptureFailedException
+     * @param handler handler used to process the captured image data
+     * @param delay number of milliseconds to wait before performing the capture
+     * @throws CaptureFailedException if the image capture failed for any reason
      */
     private native boolean capture(PictureCaptureHandler<?> handler, int delay) throws CaptureFailedException;
 
