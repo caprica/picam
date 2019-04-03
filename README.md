@@ -136,6 +136,13 @@ second picture.
 The `Camera` instance is obviously *not thread-safe*. You must not attempt to use the camera from multiple threads at
 the same time.
 
+Javadoc
+-------
+
+
+* [2.0.1 (current)](http://caprica.github.io/picam/javadoc/2.0.1 "2.0.1 Javadoc")
+* [2.0.0](http://caprica.github.io/picam/javadoc/2.0.0 "2.0.0 Javadoc")
+
 Tutorials
 ---------
 
