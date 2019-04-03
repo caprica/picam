@@ -60,7 +60,7 @@ public class StressTest {
 
         while (true) {
             try {
-                PictureCaptureHandler<?> captureHandler = new ByteArrayPictureCaptureHandler(40000);
+                PictureCaptureHandler<?> captureHandler = new NopPictureCaptureHandler();
                 camera.takePicture(captureHandler);
                 count++;
                 if (count % 50 == 0) {
