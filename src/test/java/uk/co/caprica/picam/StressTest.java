@@ -27,6 +27,7 @@ import uk.co.caprica.picam.enums.ExposureMode;
 import java.util.Date;
 
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
+import static uk.co.caprica.picam.app.Environment.dumpEnvironment;
 
 /**
  * A simple test that repeatedly captures a picture (to a byte array, then throws it away), to help check for races and
@@ -35,7 +36,9 @@ import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 public class StressTest {
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Installed native library to " + PicamNativeLibrary.installTempLibrary());
+        dumpEnvironment();
+
+        System.out.printf("Installed native library to %s%n%n", PicamNativeLibrary.installTempLibrary());
 
         Camera camera = new Camera(
             cameraConfiguration()

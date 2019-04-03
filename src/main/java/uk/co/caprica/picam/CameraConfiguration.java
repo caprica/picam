@@ -280,7 +280,13 @@ public final class CameraConfiguration {
         return this;
     }
 
-    public Camera camera() {
+    /**
+     * Create a new camera based on the configuration.
+     *
+     * @return
+     * @throws CameraException if the camera failed to open
+     */
+    public Camera camera() throws CameraException {
         return new Camera(this);
     }
 

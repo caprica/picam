@@ -67,8 +67,10 @@ public final class Camera implements AutoCloseable {
      *
      * @see #Camera(CameraConfiguration)
      * @see #close()
-     */
-    public Camera() {
+     *
+     * @throws CameraException if the camera could not be opened
+     *     */
+    public Camera() throws CameraException {
         this(null);
     }
 
@@ -82,10 +84,13 @@ public final class Camera implements AutoCloseable {
      * @see #close()
      *
      * @param cameraConfiguration camera configuration
+     * @throws CameraException if the camera could not be opened
      */
-    public Camera(CameraConfiguration cameraConfiguration) {
+    public Camera(CameraConfiguration cameraConfiguration) throws CameraException {
         this.cameraConfiguration = cameraConfiguration;
-        open();
+        if (!open()) {
+            throw new CameraException("Failed to open camera");
+        }
     }
 
     /**

@@ -21,6 +21,7 @@ package uk.co.caprica.picam.app;
 
 import uk.co.caprica.picam.Camera;
 import uk.co.caprica.picam.CameraConfiguration;
+import uk.co.caprica.picam.CameraException;
 import uk.co.caprica.picam.CaptureFailedException;
 import uk.co.caprica.picam.FilePictureCaptureHandler;
 import uk.co.caprica.picam.NativeLibraryException;
@@ -28,28 +29,18 @@ import uk.co.caprica.picam.enums.Encoding;
 
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 import static uk.co.caprica.picam.PicamNativeLibrary.installTempLibrary;
+import static uk.co.caprica.picam.app.Environment.dumpEnvironment;
 
 /**
  * A very basic application demonstrating how to setup the native library, create a camera and take a picture.
  */
 public final class Snap {
 
-    private static final String[] ENV_KEYS = {
-        "java.home",
-        "java.version",
-        "java.runtime.name",
-        "java.runtime.version",
-        "java.vm.info",
-        "java.vm.name",
-        "java.vm.version",
-        "os.version"
-    };
-
     public static void main(String[] args) {
         dumpEnvironment();
 
         try {
-            System.out.printf("Temporarily installed picam native library to %s%n", installTempLibrary());
+            System.out.printf("Temporarily installed picam native library to %s%n%n", installTempLibrary());
         }
         catch (NativeLibraryException e) {
             System.err.printf("Failed to extract, install or load the picam native library: %s%n", e.getMessage());
@@ -86,14 +77,10 @@ public final class Snap {
                 e.printStackTrace();
             }
         }
-    }
-
-    private static void dumpEnvironment() {
-        System.out.println("Environment:");
-        for (String key : ENV_KEYS) {
-            System.out.printf(" %-20s: %s%n", key, System.getProperty(key));
+        catch (CameraException e) {
+            System.err.printf("Failed to create camera", e.getMessage());
+            e.printStackTrace();;
         }
-        System.out.println();
     }
 
 }

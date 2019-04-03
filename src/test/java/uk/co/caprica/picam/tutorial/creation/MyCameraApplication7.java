@@ -21,6 +21,7 @@ package uk.co.caprica.picam.tutorial.creation;
 
 import uk.co.caprica.picam.Camera;
 import uk.co.caprica.picam.CameraConfiguration;
+import uk.co.caprica.picam.CameraException;
 import uk.co.caprica.picam.NativeLibraryException;
 import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
 import uk.co.caprica.picam.enums.Encoding;
@@ -42,6 +43,9 @@ public class MyCameraApplication7 {
 
         try (Camera camera = new Camera(config)) {
             // ... take picture ...
+        }
+        catch (CameraException e) {
+            e.printStackTrace();
         }
 
         // Camera will be automatically closed

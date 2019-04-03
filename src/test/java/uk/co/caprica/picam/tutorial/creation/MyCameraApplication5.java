@@ -20,6 +20,7 @@
 package uk.co.caprica.picam.tutorial.creation;
 
 import uk.co.caprica.picam.Camera;
+import uk.co.caprica.picam.CameraException;
 import uk.co.caprica.picam.NativeLibraryException;
 import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
 import uk.co.caprica.picam.enums.Encoding;
@@ -32,15 +33,20 @@ public class MyCameraApplication5 {
     public static void main(String[] args) throws NativeLibraryException {
         installTempLibrary();
 
-        Camera camera = new Camera(cameraConfiguration()
-            .width(1920)
-            .height(1080)
-            .automaticWhiteBalance(AutomaticWhiteBalanceMode.AUTO)
-            .encoding(Encoding.JPEG)
-            .quality(85)
-        );
+        try {
+            Camera camera = new Camera(cameraConfiguration()
+                .width(1920)
+                .height(1080)
+                .automaticWhiteBalance(AutomaticWhiteBalanceMode.AUTO)
+                .encoding(Encoding.JPEG)
+                .quality(85)
+            );
 
-        // ... take picture ...
+            // ... take picture ...
+        }
+        catch (CameraException e) {
+            e.printStackTrace();
+        }
     }
 
 }

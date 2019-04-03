@@ -21,6 +21,7 @@ package uk.co.caprica.picam.tutorial.failures;
 
 import uk.co.caprica.picam.Camera;
 import uk.co.caprica.picam.CameraConfiguration;
+import uk.co.caprica.picam.CameraException;
 import uk.co.caprica.picam.CaptureFailedException;
 import uk.co.caprica.picam.NativeLibraryException;
 import uk.co.caprica.picam.PictureCaptureHandler;
@@ -42,27 +43,32 @@ public class MyCameraApplication9 {
             .encoding(Encoding.JPEG)
             .quality(85);
 
-        Camera camera = new Camera(config);
+        try {
+            Camera camera = new Camera(config);
 
-        PictureCaptureHandler<?> pictureCaptureHandler = new MyPictureCaptureHandler();
+            PictureCaptureHandler<?> pictureCaptureHandler = new MyPictureCaptureHandler();
 
-        for (;;) {
-            try {
-                Thread.sleep(5000);
-                camera.takePicture(pictureCaptureHandler);
-            }
-            catch (InterruptedException e) {
-                System.out.println("Thread interrupted while sleeping: " + e.getMessage());
-                System.exit(-1);
-            }
-            catch (CaptureFailedException e) {
-                System.out.println("Capture failed, reopening camera: " + e.getMessage());
-                camera.close();
-                if (!camera.open()) {
-                    System.out.println("Failed to reopen the camera");
+            for (; ; ) {
+                try {
+                    Thread.sleep(5000);
+                    camera.takePicture(pictureCaptureHandler);
+                }
+                catch (InterruptedException e) {
+                    System.out.println("Thread interrupted while sleeping: " + e.getMessage());
                     System.exit(-1);
                 }
+                catch (CaptureFailedException e) {
+                    System.out.println("Capture failed, reopening camera: " + e.getMessage());
+                    camera.close();
+                    if (!camera.open()) {
+                        System.out.println("Failed to reopen the camera");
+                        System.exit(-1);
+                    }
+                }
             }
+        }
+        catch (CameraException e) {
+            e.printStackTrace();
         }
     }
 

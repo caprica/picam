@@ -22,6 +22,7 @@ package uk.co.caprica.picam;
 import uk.co.caprica.picam.enums.Encoding;
 
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
+import static uk.co.caprica.picam.app.Environment.dumpEnvironment;
 
 /**
  * A simple test to capture one or more images from the camera and save them to disk.
@@ -35,6 +36,8 @@ import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 public class BasicTest {
 
     public static void main(String[] args) throws Exception {
+        dumpEnvironment();
+
         System.out.println("Installed native library to " + PicamNativeLibrary.installTempLibrary());
 
         new BasicTest(args);

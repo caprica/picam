@@ -21,6 +21,7 @@ package uk.co.caprica.picam.tutorial.pictures;
 
 import uk.co.caprica.picam.Camera;
 import uk.co.caprica.picam.CameraConfiguration;
+import uk.co.caprica.picam.CameraException;
 import uk.co.caprica.picam.CaptureFailedException;
 import uk.co.caprica.picam.FilePictureCaptureHandler;
 import uk.co.caprica.picam.NativeLibraryException;
@@ -46,6 +47,9 @@ public class MyCameraApplication8 {
 
         try (Camera camera = new Camera(config)) {
             camera.takePicture(new FilePictureCaptureHandler(new File("photo.jpg")));
+        }
+        catch (CameraException e) {
+            e.printStackTrace();
         }
         catch (CaptureFailedException e) {
             e.printStackTrace();

@@ -21,6 +21,7 @@ package uk.co.caprica.picam.tutorial.creation;
 
 import uk.co.caprica.picam.Camera;
 import uk.co.caprica.picam.CameraConfiguration;
+import uk.co.caprica.picam.CameraException;
 import uk.co.caprica.picam.NativeLibraryException;
 import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
 import uk.co.caprica.picam.enums.Encoding;
@@ -40,11 +41,16 @@ public class MyCameraApplication6 {
             .encoding(Encoding.JPEG)
             .quality(85);
 
-        Camera camera = new Camera(config);
+        try {
+            Camera camera = new Camera(config);
 
-        // ... take picture ...
+            // ... take picture ...
 
-        camera.close();
+            camera.close();
+        }
+        catch (CameraException e) {
+            e.printStackTrace();
+        }
     }
 
 }
