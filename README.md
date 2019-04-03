@@ -19,6 +19,7 @@ Pi Foundation.
 News
 ----
 
+- 3rd April, 2019 - new release 1.1.1 available, adds basic sample/test application to the distribution jar
 - 25th March, 2019 - new release 1.1.0 available, now uses JNA direct-mapping for native methods to give a modest
   performance boost
 - 16th March, 2019 - new release 1.0.0 available
@@ -34,7 +35,7 @@ Add the following Maven dependency to your project:
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 
