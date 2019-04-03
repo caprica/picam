@@ -101,6 +101,9 @@ try (Camera camera = new Camera(config)) {
     camera.takePicture(new FilePictureCaptureHandler(new File("picam1.jpg")));
     camera.takePicture(new FilePictureCaptureHandler(new File("picam2.jpg")));
 }
+catch (CameraException e) {
+    e.printStackTrace();
+}
 ```
 Captured images can be directly saved to disk, or returned and processed as a `byte[]`.
 
@@ -122,6 +125,9 @@ You can specify the delay like this:
 try (Camera camera = new Camera(config)) {
     camera.takePicture(new FilePictureCaptureHandler(new File("picam-1.jpg")), 3000);
     camera.takePicture(new FilePictureCaptureHandler(new File("picam-2.jpg")));
+}
+catch (CameraException e) {
+    e.printStackTrace();
 }
 ```
 This example code fragment shows waiting 3 seconds (3,000 milliseconds) for the first picture, then no delay for the
