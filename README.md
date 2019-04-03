@@ -41,7 +41,7 @@ Add the following Maven dependency to your project:
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1</version>
         </dependency>
     </dependencies>
 
