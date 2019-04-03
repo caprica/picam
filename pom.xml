@@ -24,7 +24,7 @@
 
     <groupId>uk.co.caprica</groupId>
     <artifactId>picam</artifactId>
-    <version>2.0.2</version>
+    <version>2.0.3-SNAPSHOT</version>
 
     <name>picam</name>
     <description>Unofficial Java API library for the Raspberry Pi camera.</description>
