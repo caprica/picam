@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"uk.co.caprica.picam"},{"l":"uk.co.caprica.picam.app"},{"l":"uk.co.caprica.picam.enums"}]
