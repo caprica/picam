@@ -41,7 +41,7 @@ Add the following Maven dependency to your project:
         <dependency>
             <groupId>uk.co.caprica</groupId>
             <artifactId>picam</artifactId>
-            <version>2.0.1</version>
+            <version>2.0.2</version>
         </dependency>
     </dependencies>
 
@@ -138,7 +138,6 @@ the same time.
 
 Javadoc
 -------
-
 
 * [2.0.1 (current)](http://caprica.github.io/picam/javadoc/2.0.1 "2.0.1 Javadoc")
 * [2.0.0](http://caprica.github.io/picam/javadoc/2.0.0 "2.0.0 Javadoc")
