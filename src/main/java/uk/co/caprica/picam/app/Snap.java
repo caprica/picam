@@ -27,8 +27,11 @@ import uk.co.caprica.picam.FilePictureCaptureHandler;
 import uk.co.caprica.picam.NativeLibraryException;
 import uk.co.caprica.picam.enums.Encoding;
 
+import java.nio.file.Path;
+
 import static uk.co.caprica.picam.CameraConfiguration.cameraConfiguration;
 import static uk.co.caprica.picam.PicamNativeLibrary.installTempLibrary;
+import static uk.co.caprica.picam.PicamNativeLibrary.loadLibrary;
 import static uk.co.caprica.picam.app.Environment.dumpEnvironment;
 
 /**
@@ -40,7 +43,14 @@ public final class Snap {
         dumpEnvironment();
 
         try {
-            System.out.printf("Temporarily installed picam native library to %s%n%n", installTempLibrary());
+            // First check if the system property override was specified, and load the native library from there
+            Path path = loadLibrary();
+            if (path == null) {
+                // No system property was set, extract the bundled native library from the jar
+                System.out.printf("Temporarily installed picam native library to %s%n%n", installTempLibrary());
+            } else {
+                System.out.printf("Loaded picam native library at %s%n%n", path);
+            }
         }
         catch (NativeLibraryException e) {
             System.err.printf("Failed to extract, install or load the picam native library: %s%n", e.getMessage());

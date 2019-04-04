@@ -50,6 +50,11 @@ import java.util.Collections;
 public final class PicamNativeLibrary {
 
     /**
+     * Name of the optional system property that can be used to specify the native library location.
+     */
+    private static final String SYSTEM_PROPERTY_NAME = "picam-native";
+
+    /**
      * Name of the "directory" within the bundle that contains the native library.
      */
     private static final String SOURCE_PREFIX = "/native";
@@ -197,6 +202,31 @@ public final class PicamNativeLibrary {
         System.load(installFilePath.toFile().getAbsolutePath());
         installed = true;
         return installFilePath;
+    }
+
+    /**
+     * Check if the system property used to specify the full (absolute) path of the native library (including the
+     * filename) has been set, and if so load the library from that path.
+     * <p>
+     * This is used primarily for testing new/alternate versions of the native library, most applications should not use
+     * this method.
+     *
+     * @return full path of the installed native library file; <code>null</code> if the system property was not set
+     * @throws NativeLibraryException if the native library could not be installed or loaded
+     */
+    public static Path loadLibrary() throws NativeLibraryException {
+        String nativeLibraryPath = System.getProperty(SYSTEM_PROPERTY_NAME);
+        if (nativeLibraryPath != null) {
+            try {
+                System.load(nativeLibraryPath);
+            }
+            catch (UnsatisfiedLinkError e) {
+                throw new NativeLibraryException("Failed to load native library", e);
+            }
+            return Paths.get(nativeLibraryPath);
+        } else {
+            return null;
+        }
     }
 
     private PicamNativeLibrary() {
