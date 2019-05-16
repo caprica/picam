@@ -19,6 +19,7 @@
 
 package uk.co.caprica.picam;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -27,7 +28,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 
 /**
@@ -194,7 +194,11 @@ public final class PicamNativeLibrary {
         Path sourceFilePath = Files.list(sourcePath).filter(path -> path.getFileName().toString().endsWith(LIBRARY_SUFFIX)).findFirst().orElseThrow(() -> new IOException("Failed to find native library to extract"));
         Path installFilePath = installPath.resolve(sourceFilePath.getFileName().toString());
         if (overwrite || Files.notExists(installFilePath)) {
-            Files.copy(sourceFilePath, installFilePath, StandardCopyOption.REPLACE_EXISTING);
+            try (FileOutputStream out = new FileOutputStream(installFilePath.toFile())) {
+                Files.copy(sourceFilePath, out);
+                out.flush();
+                out.getFD().sync();
+            }
             if (Files.notExists(installFilePath)) {
                 throw new IOException(String.format("Failed to copy native library to '%s'", installFilePath));
             }
