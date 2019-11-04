@@ -186,12 +186,7 @@ public final class CameraConfiguration {
         return this;
     }
 
-    public CameraConfiguration vdieoStabilsation() {
-        this.videoStabilisation = true;
-        return this;
-    }
-
-    public CameraConfiguration vdieoStabilsation(Boolean videoStabilisation) {
+    public CameraConfiguration videoStabilisation(Boolean videoStabilisation) {
         this.videoStabilisation = videoStabilisation;
         return this;
     }
