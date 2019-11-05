@@ -25,7 +25,11 @@ import uk.co.caprica.picam.CameraException;
 import uk.co.caprica.picam.CaptureFailedException;
 import uk.co.caprica.picam.FilePictureCaptureHandler;
 import uk.co.caprica.picam.NativeLibraryException;
+import uk.co.caprica.picam.enums.AutomaticWhiteBalanceMode;
+import uk.co.caprica.picam.enums.DynamicRangeCompressionStrength;
 import uk.co.caprica.picam.enums.Encoding;
+import uk.co.caprica.picam.enums.ExposureMeteringMode;
+import uk.co.caprica.picam.enums.ExposureMode;
 
 import java.nio.file.Path;
 
@@ -72,6 +76,12 @@ public final class Snap {
             .height(height)
             .encoding(Encoding.JPEG)
             .quality(85)
+            .brightness(50)
+            .exposureMode(ExposureMode.AUTO)
+            .exposureMeteringMode(ExposureMeteringMode.AVERAGE)
+            .automaticWhiteBalanceMode(AutomaticWhiteBalanceMode.AUTO)
+            .colourEffect(false, 128, 128)
+            .dynamicRangeCompressionStrength(DynamicRangeCompressionStrength.OFF)
             .captureTimeout(10000);
 
         FilePictureCaptureHandler pictureCaptureHandler = new FilePictureCaptureHandler(filename);
@@ -79,7 +89,7 @@ public final class Snap {
         try (Camera camera = new Camera(config)) {
             try {
                 System.out.println("Taking picture...");
-                camera.takePicture(pictureCaptureHandler, 1000);
+                camera.takePicture(pictureCaptureHandler, 5000);
                 System.out.println("...success!");
             }
             catch (CaptureFailedException e) {
