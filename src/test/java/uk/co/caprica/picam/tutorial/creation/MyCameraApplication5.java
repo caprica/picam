@@ -37,7 +37,7 @@ public class MyCameraApplication5 {
             Camera camera = new Camera(cameraConfiguration()
                 .width(1920)
                 .height(1080)
-                .automaticWhiteBalance(AutomaticWhiteBalanceMode.AUTO)
+                .automaticWhiteBalanceMode(AutomaticWhiteBalanceMode.AUTO)
                 .encoding(Encoding.JPEG)
                 .quality(85)
             );

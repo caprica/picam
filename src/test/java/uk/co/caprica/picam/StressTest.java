@@ -44,7 +44,7 @@ public class StressTest {
             cameraConfiguration()
                 .width(1920)
                 .height(1080)
-                .automaticWhiteBalance(AutomaticWhiteBalanceMode.AUTO)
+                .automaticWhiteBalanceMode(AutomaticWhiteBalanceMode.AUTO)
                 .exposureMode(ExposureMode.AUTO)
                 .exposureMeteringMode(ExposureMeteringMode.MATRIX)
                 .encoding(Encoding.JPEG)

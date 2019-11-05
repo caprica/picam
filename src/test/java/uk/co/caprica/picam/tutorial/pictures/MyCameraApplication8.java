@@ -41,7 +41,7 @@ public class MyCameraApplication8 {
         CameraConfiguration config = cameraConfiguration()
             .width(1920)
             .height(1080)
-            .automaticWhiteBalance(AutomaticWhiteBalanceMode.AUTO)
+            .automaticWhiteBalanceMode(AutomaticWhiteBalanceMode.AUTO)
             .encoding(Encoding.JPEG)
             .quality(85);
 

@@ -224,7 +224,7 @@ public final class CameraConfiguration {
         return this;
     }
 
-    public CameraConfiguration automaticWhiteBalance(AutomaticWhiteBalanceMode automaticWhiteBalanceMode) {
+    public CameraConfiguration automaticWhiteBalanceMode(AutomaticWhiteBalanceMode automaticWhiteBalanceMode) {
         this.automaticWhiteBalanceMode = automaticWhiteBalanceMode;
         return this;
     }
